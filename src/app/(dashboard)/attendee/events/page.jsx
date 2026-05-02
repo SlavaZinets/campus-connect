@@ -1,4 +1,5 @@
 import EventCard from '@/components/events/EventCard';
+import FilterBar from '@/components/events/FilterBar';
 import styles from './page.module.css';
 
 const MOCK_EVENTS = [
@@ -69,7 +70,8 @@ export default async function EventsPage({ searchParams }) {
   return (
     <main>
       <div className="container">
-        <h1>Events</h1>
+        <h1 className={styles.title}>Events</h1>
+        <FilterBar />
         <div className={styles.grid}>
           {events.map(e => <EventCard key={e.id} {...e} />)}
         </div>
