@@ -2,7 +2,10 @@
 
 import {useEffect, useState} from 'react';
 import Link from 'next/link';
+import Logo from '@/components/ui/Logo';
 import styles from './style.module.css';
+import {RxHamburgerMenu} from "react-icons/rx";
+import {IoMdClose} from "react-icons/io";
 
 const NAV_LINKS = [
     {href: '/events', label: 'Events'},
@@ -22,10 +25,7 @@ export default function Header() {
         <header className={styles.header}>
             <div className="container">
                 <div className={styles.inner}>
-                    <Link href="/" className={styles.brand}>
-                        <span className={styles.brandMark}>CC</span>
-                        <span className={styles.brandName}>CampusConnect</span>
-                    </Link>
+                    <Logo onClick={handleClose} />
 
                     <nav className={styles.desktopNav}>
                         <ul className={styles.desktopList}>
@@ -47,7 +47,7 @@ export default function Header() {
                         className={styles.hamburger}
                         onClick={handleOpen}
                     >
-                        <span>0</span>
+                        <RxHamburgerMenu size={24} />
                     </button>
                 </div>
 
@@ -65,7 +65,7 @@ export default function Header() {
                             className={styles.closeButton}
                             onClick={handleClose}
                         >
-                         X
+                            <IoMdClose size={24} />
                         </button>
                     </div>
 

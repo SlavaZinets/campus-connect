@@ -16,40 +16,6 @@
     padding: 12px 0;
 }
 
-.brand {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    color: var(--ink);
-    font-family: var(--font-display), serif;
-    font-weight: var(--fw-semibold);
-    font-size: var(--fs-h3);
-    line-height: 1;
-}
-
-.brand:hover {
-    color: var(--ink);
-}
-
-.brandMark {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 32px;
-    height: 32px;
-    border-radius: 8px;
-    background-color: var(--coral);
-    color: var(--white);
-    font-family: var(--font-display), serif;
-    font-size: 14px;
-    font-weight: var(--fw-semibold);
-    letter-spacing: 0.02em;
-}
-
-.brandName {
-    font-size: var(--fs-body-l);
-}
-
 .hamburger {
     display: flex;
     flex-direction: column;
