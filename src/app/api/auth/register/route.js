@@ -21,7 +21,7 @@ export async function POST(req){
         const [exisitng] = await pool.query(
             'SELECT id FROM users WHERE email = ?',
             [email]
-        )
+        );
 
         if (exisitng.length > 0) {
             return NextResponse.json({ error: 'Email already in use' }, { status: 409 });
