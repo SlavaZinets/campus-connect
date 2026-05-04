@@ -1,6 +1,7 @@
 import EventCard from '@/components/events/EventCard';
 import FilterBar from '@/components/events/FilterBar';
 import styles from './page.module.css';
+import eventPhoto from '@/assets/event-pics/event1.jpg';
 
 const MOCK_EVENTS = [
   {
@@ -11,6 +12,7 @@ const MOCK_EVENTS = [
     start_at: '2026-05-10T14:00:00',
     capacity: 50,
     booked: 38,
+    photo: eventPhoto,
   },
   {
     id: 2,
@@ -20,6 +22,7 @@ const MOCK_EVENTS = [
     start_at: '2026-05-14T19:30:00',
     capacity: 120,
     booked: 120,
+    photo: eventPhoto,
   },
   {
     id: 3,
@@ -29,6 +32,7 @@ const MOCK_EVENTS = [
     start_at: '2026-05-17T10:00:00',
     capacity: 30,
     booked: 8,
+    photo: eventPhoto,
   },
   {
     id: 4,
@@ -38,6 +42,7 @@ const MOCK_EVENTS = [
     start_at: '2026-05-20T13:00:00',
     capacity: 80,
     booked: 61,
+    photo: eventPhoto,
   },
   {
     id: 5,
@@ -47,6 +52,7 @@ const MOCK_EVENTS = [
     start_at: '2026-05-28T12:00:00',
     capacity: 200,
     booked: 44,
+    photo: eventPhoto,
   },
   {
     id: 6,
@@ -56,6 +62,7 @@ const MOCK_EVENTS = [
     start_at: '2026-06-02T09:00:00',
     capacity: 20,
     booked: 15,
+    photo: eventPhoto,
   },
 ];
 
@@ -73,7 +80,7 @@ export default async function EventsPage({ searchParams }) {
         <h1 className={styles.title}>Events</h1>
         <FilterBar />
         <div className={styles.grid}>
-          {events.map(e => <EventCard key={e.id} {...e} />)}
+          {events.map(e => <EventCard key={e.id} event={e} />)}
         </div>
       </div>
     </main>
