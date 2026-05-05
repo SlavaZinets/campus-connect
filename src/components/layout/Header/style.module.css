@@ -54,8 +54,8 @@
     align-items: center;
     gap: 24px;
     list-style: none;
-    padding: 0;
     margin: 0;
+    padding-right: 20px;
 }
 
 .desktopList li {

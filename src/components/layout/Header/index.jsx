@@ -8,6 +8,7 @@ import {RxHamburgerMenu} from "react-icons/rx";
 import {IoMdClose} from "react-icons/io";
 
 const NAV_LINKS = [
+    {href: '/', label: 'Home'},
     {href: '/events', label: 'Events'},
     {href: '/attendee/bookings', label: 'My Bookings'},
 ];
@@ -25,7 +26,7 @@ export default function Header() {
         <header className={styles.header}>
             <div className="container">
                 <div className={styles.inner}>
-                    <Logo onClick={handleClose} />
+                    <Logo/>
 
                     <nav className={styles.desktopNav}>
                         <ul className={styles.desktopList}>
