@@ -6,6 +6,7 @@ import styles from './index.module.css';
 const CATEGORIES = ['All', 'Technology', 'Social', 'Career', 'Wellbeing', 'Sports'];
 
 export default function FilterBar() {
+  
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();

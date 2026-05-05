@@ -1,12 +1,12 @@
 import EventCard from '@/components/events/EventCard';
 import FilterBar from '@/components/events/FilterBar';
 import styles from './page.module.css';
-import eventPhoto from '@/assets/event-pics/event1.jpg';
+import eventPhoto from '@/assets/event-pics/event2.jpeg';
 
 const MOCK_EVENTS = [
   {
     id: 1,
-    title: 'Spring Hackathon 2026',
+    title: 'Spring Hackathon 2026',   
     category: 'Technology',
     location: 'Block D, Room 12',
     start_at: '2026-05-10T14:00:00',

@@ -11,23 +11,21 @@ export default function EventCard({ event }) {
   return (
     <Link href={`/attendee/events/${id}`} className={styles.cardLink}>
       <article className={styles.card}>
-        <div className={styles.top}>
-          <span className={styles.badge}>{category}</span>
-        </div>
-
         {photo && (
-          <Image src={photo} alt={title} width={0} height={0} sizes="100vw" className={styles.photo} />
+          <div className={styles.photoWrap}>
+            <Image src={photo} alt={title} fill sizes="100vw" className={styles.photo} />
+          </div>
         )}
 
-        <h3 className={styles.title}>{title}</h3>
-
-        <div className={styles.meta}>
-          <span>{formatDate(start_at)}</span>
-          <span className={styles.dot}>·</span>
-          <span>{location}</span>
+        <div className={styles.eventCardContent}>
+          <h3 className={styles.title}>{title}</h3>
+          <div className={styles.meta}>
+            <span>{formatDate(start_at)}</span>
+            <span className={styles.dot}>·</span>
+            <span>{location}</span>
+          </div>
+          <CapacityBar capacity={capacity} booked={booked} />
         </div>
-
-        <CapacityBar capacity={capacity} booked={booked} />
       </article>
     </Link>
   );
