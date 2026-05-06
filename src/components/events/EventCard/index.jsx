@@ -3,6 +3,7 @@ import Image from 'next/image';
 import styles from './index.module.css';
 import { formatDate } from '@/utils/helpers';
 import CapacityBar from '@/components/events/CapacityBar';
+import LikeButton from '@/components/ui/LikeButton';
 
 
 export default function EventCard({ event }) {
@@ -14,6 +15,9 @@ export default function EventCard({ event }) {
         {photo && (
           <div className={styles.photoWrap}>
             <Image src={photo} alt={title} fill sizes="100vw" className={styles.photo} />
+            <div className={styles.likeOverlay}>
+              <LikeButton eventId={id} size="sm" />
+            </div>
           </div>
         )}
 

@@ -18,6 +18,13 @@
   object-fit: cover;
 }
 
+/* actions row under hero */
+.actionsRow {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 24px;
+}
+
 /* two-column layout */
 .layout {
   display: grid;
