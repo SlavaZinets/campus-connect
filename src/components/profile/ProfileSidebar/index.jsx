@@ -1,3 +1,4 @@
+import ProfileAvatar from './ProfileAvatar';
 import SignOutButton from './SignOutButton';
 import styles from './index.module.css';
 
@@ -6,9 +7,7 @@ export default function ProfileSidebar({ user }) {
 
   return (
     <aside className={styles.sidebar}>
-      <div className={styles.avatar} aria-hidden="true">
-        <span className="material-symbols-outlined">account_circle</span>
-      </div>
+      <ProfileAvatar userId={user.id} />
       <p className={styles.name}>{fullName}</p>
       <p className={styles.email}>{user.email}</p>
       <SignOutButton />
