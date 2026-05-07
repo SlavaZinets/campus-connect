@@ -4,6 +4,7 @@ import { formatDay, formatLongDate, formatTimeRange } from '@/utils/helpers';
 import CapacityBar from '@/components/events/CapacityBar';
 import EventCard from '@/components/events/EventCard';
 import LikeButton from '@/components/ui/LikeButton';
+import BookButton from '@/components/events/BookButton';
 
 export default function EventDetail({ event, similarEvents = [] }) {
   const {
@@ -120,9 +121,7 @@ export default function EventDetail({ event, similarEvents = [] }) {
           <div className={styles.panelInner}>
             <p className={styles.panelTitle}>Book a spot</p>
             <CapacityBar capacity={capacity} booked={booked} />
-            <button className={styles.bookBtn} disabled={isFull}>
-              {isFull ? 'Fully booked' : 'Book a spot'}
-            </button>
+            <BookButton event={event} isFull={isFull} className={styles.bookBtn} />
           </div>
         </aside>
       </div>
@@ -131,9 +130,7 @@ export default function EventDetail({ event, similarEvents = [] }) {
         <div className={styles.mobileBarCapacity}>
           <CapacityBar capacity={capacity} booked={booked} />
         </div>
-        <button className={styles.bookBtn} disabled={isFull}>
-          {isFull ? 'Fully booked' : 'Book a spot'}
-        </button>
+        <BookButton event={event} isFull={isFull} className={styles.bookBtn} />
       </div>
     </article>
   );
