@@ -67,8 +67,50 @@ export const MOCK_EVENTS = [
 export const MOCK_BOOKED_EVENT_IDS = [1, 3];
 export const MOCK_LIKED_EVENT_IDS = [2, 4, 6];
 
+// Events created by CURRENT_USER (organiser dashboard data)
+export const MOCK_OWN_EVENT_IDS = [1, 4, 5];
+
+// Categories for the event form dropdown
+export const MOCK_CATEGORIES = [
+  { id: 1, name: 'Technology' },
+  { id: 2, name: 'Social' },
+  { id: 3, name: 'Career' },
+  { id: 4, name: 'Wellbeing' },
+  { id: 5, name: 'Sports' },
+];
+
+// Mock bookers per event — for the organiser's "view bookings" page.
+// Real data comes from `GET /api/events/[id]/bookings` joined to users.
+export const MOCK_BOOKERS_BY_EVENT_ID = {
+  1: [
+    { id: 101, booked_at: '2026-04-12T09:23:00', status: 'confirmed', user: { id: 11, name: 'Anya Petrenko' } },
+    { id: 102, booked_at: '2026-04-12T11:05:00', status: 'confirmed', user: { id: 12, name: 'Diego Hernandez' } },
+    { id: 103, booked_at: '2026-04-13T14:48:00', status: 'confirmed', user: { id: 13, name: 'Priya Singh' } },
+    { id: 104, booked_at: '2026-04-15T08:14:00', status: 'cancelled', user: { id: 14, name: 'Liam O\'Connor' } },
+    { id: 105, booked_at: '2026-04-17T16:30:00', status: 'confirmed', user: { id: 15, name: 'Mei Tanaka' } },
+    { id: 106, booked_at: '2026-04-19T10:02:00', status: 'confirmed', user: { id: 16, name: 'Tomás Silva' } },
+  ],
+  4: [
+    { id: 201, booked_at: '2026-04-20T12:11:00', status: 'confirmed', user: { id: 21, name: 'Alex Carter' } },
+    { id: 202, booked_at: '2026-04-21T17:42:00', status: 'confirmed', user: { id: 22, name: 'Sara Holm' } },
+    { id: 203, booked_at: '2026-04-22T08:55:00', status: 'confirmed', user: { id: 23, name: 'Hassan Yusuf' } },
+  ],
+  5: [
+    { id: 301, booked_at: '2026-05-01T10:00:00', status: 'confirmed', user: { id: 31, name: 'Olivia Nguyen' } },
+    { id: 302, booked_at: '2026-05-02T11:15:00', status: 'confirmed', user: { id: 32, name: 'Marko Petrov' } },
+  ],
+};
+
 export function getEventsByIds(ids) {
   return ids
     .map(id => MOCK_EVENTS.find(e => e.id === id))
     .filter(Boolean);
+}
+
+export function getEventById(id) {
+  return MOCK_EVENTS.find(e => e.id === Number(id));
+}
+
+export function getBookersByEventId(id) {
+  return MOCK_BOOKERS_BY_EVENT_ID[Number(id)] ?? [];
 }

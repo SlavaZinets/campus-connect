@@ -1,0 +1,127 @@
+.card {
+  background-color: var(--paper);
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  transition: transform 150ms ease-out, box-shadow 150ms ease-out;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+/* photo link wraps only the image */
+.photoLink {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+}
+
+.photoWrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+}
+
+.photo {
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+}
+
+.photoPlaceholder {
+  width: 100%;
+  height: 100%;
+  background-color: var(--border);
+}
+
+/* content */
+.content {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* title row: title on the left, edit/delete buttons on the right */
+.titleRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 4px;
+}
+
+.titleLink {
+  text-decoration: none;
+  color: inherit;
+  flex: 1;
+  min-width: 0;
+}
+
+.titleLink:hover .title {
+  color: var(--coral);
+}
+
+.title {
+  font-family: var(--font-display);
+  font-size: var(--fs-h3);
+  font-weight: var(--fw-semibold);
+  color: var(--ink);
+  line-height: var(--lh-h3);
+  margin: 0;
+  transition: color 150ms ease-out;
+}
+
+.date {
+  font-size: var(--fs-body-m);
+  font-weight: var(--fw-semibold);
+  color: var(--ink);
+  margin: 0;
+}
+
+.location {
+  font-size: var(--fs-body-s);
+  color: var(--warm-gray);
+  margin: 0 0 12px;
+}
+
+.bookedRow {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.bookedNumber {
+  font-family: var(--font-display);
+  font-size: var(--fs-body-l);
+  font-weight: var(--fw-semibold);
+  color: var(--ink);
+}
+
+.bookedLabel {
+  font-size: var(--fs-body-s);
+  color: var(--warm-gray);
+}
+
+.bar {
+  height: 6px;
+  background-color: var(--border);
+  border-radius: 99px;
+  overflow: hidden;
+  margin-top: 6px;
+}
+
+.barFill {
+  height: 100%;
+  border-radius: 99px;
+  background-color: var(--sage);
+  transition: width 300ms ease-out;
+}
+
+.barAlmost { background-color: var(--amber); }
+.barFull   { background-color: var(--rust); }

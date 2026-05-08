@@ -6,5 +6,7 @@ export const CURRENT_USER = {
   email: 'maxchechotkin@gmail.com',
   phone: '+380964151541',
   dateOfBirth: '2025-06-06',
-  role: 'attendee',
+  // Organiser role inherits all attendee features, so this keeps both areas of
+  // the app navigable while auth isn't wired up yet.
+  role: 'organiser',
 };

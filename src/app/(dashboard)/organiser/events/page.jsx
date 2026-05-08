@@ -1,0 +1,43 @@
+import Link from 'next/link';
+import OwnerEventCard from '@/components/events/OwnerEventCard';
+import EmptyState from '@/components/profile/EmptyState';
+import { getEventsByIds, MOCK_OWN_EVENT_IDS } from '@/lib/mock/events';
+import styles from './page.module.css';
+
+export default function OrganiserEventsPage() {
+  // TODO: GET /api/events/mine — events created by the caller
+  const ownEvents = getEventsByIds(MOCK_OWN_EVENT_IDS);
+
+  return (
+    <main className={styles.main}>
+      <div className="container">
+        <header className={styles.header}>
+          <div>
+            <h1 className={styles.title}>My events</h1>
+            <p className={styles.subtitle}>
+              Events you've created. Click a card to manage bookings, edit details, or delete.
+            </p>
+          </div>
+          <Link href="/organiser/events/new" className={styles.newBtn}>
+            <span className="material-symbols-outlined" aria-hidden="true">add</span>
+            New event
+          </Link>
+        </header>
+
+        {ownEvents.length === 0 ? (
+          <EmptyState
+            message="You haven't created any events yet."
+            ctaHref="/organiser/events/new"
+            ctaLabel="Create your first event"
+          />
+        ) : (
+          <div className={styles.grid}>
+            {ownEvents.map((event) => (
+              <OwnerEventCard key={event.id} event={event} />
+            ))}
+          </div>
+        )}
+      </div>
+    </main>
+  );
+}
