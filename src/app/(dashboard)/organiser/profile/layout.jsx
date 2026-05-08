@@ -5,10 +5,8 @@ import ProfileSidebar from '@/components/profile/ProfileSidebar';
 import styles from './layout.module.css';
 
 const ORGANISER_TABS = [
-  { href: '/organiser/profile',          label: 'Personal information' },
-  { href: '/organiser/profile/events',   label: 'Created events' },
-  { href: '/organiser/profile/bookings', label: 'Booked events' },
-  { href: '/organiser/profile/likes',    label: 'Liked events' },
+  { href: '/organiser/profile',        label: 'Personal information' },
+  { href: '/organiser/profile/events', label: 'Created events' },
 ];
 
 export default function OrganiserProfileLayout({ children }) {
