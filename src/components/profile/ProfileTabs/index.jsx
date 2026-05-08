@@ -4,18 +4,22 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import styles from './index.module.css';
 
-const TABS = [
+const ATTENDEE_TABS = [
   { href: '/attendee/profile',          label: 'Personal information' },
   { href: '/attendee/profile/bookings', label: 'Booked events' },
   { href: '/attendee/profile/likes',    label: 'Liked events' },
 ];
 
-export default function ProfileTabs() {
+/**
+ * Pass a custom `tabs` array (e.g. for organiser/admin profiles) or fall back
+ * to the attendee tab set.
+ */
+export default function ProfileTabs({ tabs = ATTENDEE_TABS }) {
   const pathname = usePathname();
 
   return (
     <nav className={styles.tabs} aria-label="Profile sections">
-      {TABS.map(tab => {
+      {tabs.map(tab => {
         const isActive = pathname === tab.href;
         return (
           <Link
