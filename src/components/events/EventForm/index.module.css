@@ -69,6 +69,17 @@
   box-shadow: 0 0 0 3px rgba(201, 100, 66, 0.15);
 }
 
+.error {
+  font-size: var(--fs-body-s);
+  font-weight: var(--fw-medium);
+  color: var(--rust);
+  background-color: rgba(184, 86, 56, 0.08);
+  border: 1px solid var(--rust);
+  border-radius: 8px;
+  padding: 10px 14px;
+  margin: 0;
+}
+
 .actions {
   display: flex;
   justify-content: flex-end;

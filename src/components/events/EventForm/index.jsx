@@ -23,6 +23,7 @@ export default function EventForm({ mode = 'create', initialValues }) {
   const router = useRouter();
   const [form, setForm] = useState(() => ({ ...EMPTY, ...(initialValues ?? {}) }));
   const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState(null);
 
   function update(field) {
     return (e) => setForm((prev) => ({ ...prev, [field]: e.target.value }));
@@ -31,18 +32,84 @@ export default function EventForm({ mode = 'create', initialValues }) {
   async function handleSubmit(e) {
     e.preventDefault();
     setSubmitting(true);
+    setError(null);
 
-    if (mode === 'create') {
-      // TODO: POST /api/events  -> { id }
-      console.log('TODO: create event', form);
-    } else {
-      // TODO: PATCH /api/events/[id]
-      console.log('TODO: update event', initialValues?.id, form);
+    // API expects category_id (number); the form binds category as a name.
+    const categoryId = MOCK_CATEGORIES.find((c) => c.name === form.category)?.id;
+    if (!categoryId) {
+      setError('Please pick a valid category.');
+      setSubmitting(false);
+      return;
     }
 
-    // Optimistic UX: bounce back to the organiser dashboard
-    router.push('/organiser/events');
-    router.refresh();
+    // datetime-local 'YYYY-MM-DDTHH:mm' -> MySQL 'YYYY-MM-DD HH:mm:ss'
+    const toMysql = (v) => (v ? v.replace('T', ' ') + ':00' : v);
+
+    const payload = {
+      title: form.title,
+      description: form.description,
+      location: form.location,
+      category_id: categoryId,
+      start_at: toMysql(form.start_at),
+      capacity: Number(form.capacity),
+    };
+
+    try {
+      if (mode === 'create') {
+        const res = await fetch('/api/events', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+
+        if (res.status === 401) {
+          setError('Your session expired. Please log in again.');
+          setSubmitting(false);
+          return;
+        }
+        if (res.status === 403) {
+          setError('You need to be logged in as an organiser to create events.');
+          setSubmitting(false);
+          return;
+        }
+        if (res.status === 400) {
+          const body = await res.json().catch(() => ({}));
+          setError(body.error || 'Please fill in all required fields.');
+          setSubmitting(false);
+          return;
+        }
+        if (!res.ok) {
+          throw new Error(`POST /api/events failed: ${res.status}`);
+        }
+      } else {
+        const res = await fetch(`/api/events/${initialValues.id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+
+        if (res.status === 401) {
+          setError('Your session expired. Please log in again.');
+          setSubmitting(false);
+          return;
+        }
+        if (res.status === 403) {
+          setError('You can only edit events you organise.');
+          setSubmitting(false);
+          return;
+        }
+        if (!res.ok) {
+          throw new Error(`PUT /api/events/${initialValues.id} failed: ${res.status}`);
+        }
+      }
+
+      router.push('/organiser/events');
+      router.refresh();
+    } catch (err) {
+      console.error(err);
+      setError('Something went wrong. Please try again.');
+      setSubmitting(false);
+    }
   }
 
   function handleCancel() {
@@ -149,6 +216,8 @@ export default function EventForm({ mode = 'create', initialValues }) {
           placeholder="50"
         />
       </div>
+
+      {error && <p className={styles.error} role="alert">{error}</p>}
 
       <div className={styles.actions}>
         <button type="button" onClick={handleCancel} className={styles.cancelBtn}>

@@ -81,12 +81,12 @@ export const MOCK_LIKED_EVENT_IDS = [2, 4, 6];
 export const MOCK_OWN_EVENT_IDS = [1, 4, 5];
 
 // Categories for the event form dropdown
+// Match the seed: Workshop, Social, Sports, Career (ids 1–4 from seed.sql).
 export const MOCK_CATEGORIES = [
-  { id: 1, name: 'Technology' },
+  { id: 1, name: 'Workshop' },
   { id: 2, name: 'Social' },
-  { id: 3, name: 'Career' },
-  { id: 4, name: 'Wellbeing' },
-  { id: 5, name: 'Sports' },
+  { id: 3, name: 'Sports' },
+  { id: 4, name: 'Career' },
 ];
 
 // Mock bookers per event — for the organiser's "view bookings" page.

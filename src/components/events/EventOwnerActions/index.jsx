@@ -17,10 +17,27 @@ export default function EventOwnerActions({ eventId }) {
 
   async function handleDelete() {
     setDeleting(true);
-    // TODO: DELETE /api/events/[id]
-    console.log('TODO: delete event', eventId);
-    router.push('/organiser/events');
-    router.refresh();
+
+    try {
+      const res = await fetch(`/api/events/${eventId}`, { method: 'DELETE' });
+
+      if (res.status === 401) {
+        alert('Your session expired. Please log in again.');
+      } else if (res.status === 403) {
+        alert('You can only delete events you organise.');
+      } else if (!res.ok) {
+        throw new Error(`DELETE /api/events/${eventId} failed: ${res.status}`);
+      }
+
+      setConfirmOpen(false);
+      router.push('/organiser/events');
+      router.refresh();
+    } catch (err) {
+      console.error(err);
+      alert('Something went wrong. Please try again.');
+    } finally {
+      setDeleting(false);
+    }
   }
 
   return (

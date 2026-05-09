@@ -39,7 +39,7 @@ export async function GET(req, { params }) {
 
 export async function PUT(req, { params }) {
     try {
-        const { id } = params;
+        const { id } = await params;
 
         const body = await req.json();
         const { title, description, location, category_id, start_at, capacity } = body;
@@ -76,7 +76,7 @@ export async function PUT(req, { params }) {
 
 export async function DELETE(req, { params }) {
     try {
-        const { id } = params;
+        const { id } = await params;
 
         const session = await getSession(req);
         if (!session) return NextResponse.json({error: 'Unauthorised'}, {status: 401});
