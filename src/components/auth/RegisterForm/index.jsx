@@ -2,12 +2,14 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import Logo from '@/components/ui/Logo';
 import BackButton from '@/components/ui/BackButton';
 import PrimaryButton from '@/components/ui/PrimaryButton';
 import styles from './style.module.css';
 
 export default function RegisterForm() {
+    const router = useRouter();
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -16,8 +18,37 @@ export default function RegisterForm() {
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
 
-    function handleSubmit(e) {
+    async function handleSubmit(e) {
         e.preventDefault();
+        setError('');
+
+        if (password !== confirmPassword) {
+            setError('Passwords do not match');
+            return;
+        }
+
+        setLoading(true);
+        try {
+            const res = await fetch('/api/auth/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name, email, password, role }),
+            });
+
+            if (!res.ok) {
+                const body = await res.json().catch(() => ({}));
+                setError(body.error || 'Registration failed');
+                setLoading(false);
+                return;
+            }
+
+            const dest = role === 'organiser' ? '/organiser/events' : '/attendee/events';
+            router.push(dest);
+            router.refresh();
+        } catch (err) {
+            setError('Network error. Please try again.');
+            setLoading(false);
+        }
     }
 
     return (

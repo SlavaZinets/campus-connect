@@ -1,11 +1,15 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
 import styles from './index.module.css';
 
 export default function SignOutButton() {
-  function handleSignOut() {
-    // TODO: POST /api/auth/logout, then router.push('/login')
-    console.log('TODO: sign out');
+  const router = useRouter();
+
+  async function handleSignOut() {
+    await fetch('/api/auth/logout', { method: 'POST' });
+    router.push('/login');
+    router.refresh();
   }
 
   return (

@@ -1,10 +1,12 @@
-import { CURRENT_USER } from '@/lib/mock/currentUser';
+import { redirect } from 'next/navigation';
+import { getCurrentUser } from '@/lib/auth/getCurrentUser';
 import ProfileTabs from '@/components/profile/ProfileTabs';
 import ProfileSidebar from '@/components/profile/ProfileSidebar';
 import styles from './layout.module.css';
 
-export default function ProfileLayout({ children }) {
-  const user = CURRENT_USER;
+export default async function ProfileLayout({ children }) {
+  const user = await getCurrentUser();
+  if (!user) redirect('/login');
 
   return (
     <main className={styles.main}>

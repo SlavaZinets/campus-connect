@@ -2,6 +2,7 @@
 
 import {useEffect, useState} from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import Logo from '@/components/ui/Logo';
 import PrimaryButton from '@/components/ui/PrimaryButton';
 import styles from './style.module.css';
@@ -15,12 +16,30 @@ const NAV_LINKS = [
 ];
 
 export default function Header() {
+    const router = useRouter();
     const [isOpen, setIsOpen] = useState(false);
+    const [user, setUser] = useState(null);
 
     const handleOpen = () => setIsOpen(true);
     const handleClose = () => setIsOpen(false);
 
+    useEffect(() => {
+        fetch('/api/auth/me')
+            .then(res => (res.ok ? res.json() : null))
+            .then(setUser)
+            .catch(() => setUser(null));
+    }, []);
 
+    async function handleSignOut() {
+        await fetch('/api/auth/logout', { method: 'POST' });
+        setUser(null);
+        handleClose();
+        router.push('/login');
+        router.refresh();
+    }
+
+    const profileHref = user?.role === 'organiser' ? '/organiser/profile' : '/attendee/profile';
+    const firstName = user?.name ? user.name.split(' ')[0] : '';
 
     return (
 
@@ -40,8 +59,21 @@ export default function Header() {
                             ))}
                         </ul>
                         <div className={styles.desktopActions}>
-                            <Link href="/login" className={styles.linkSecondary}>Log in</Link>
-                            <PrimaryButton href="/register">Sign up</PrimaryButton>
+                            {user ? (
+                                <>
+                                    <Link href={profileHref} className={styles.linkSecondary}>
+                                        {firstName}
+                                    </Link>
+                                    <button type="button" onClick={handleSignOut} className={styles.linkSecondary}>
+                                        Sign out
+                                    </button>
+                                </>
+                            ) : (
+                                <>
+                                    <Link href="/login" className={styles.linkSecondary}>Log in</Link>
+                                    <PrimaryButton href="/register">Sign up</PrimaryButton>
+                                </>
+                            )}
                         </div>
                     </nav>
 
@@ -88,12 +120,25 @@ export default function Header() {
                     </nav>
 
                     <div className={styles.sidebarFooter}>
-                        <Link href="/login" className={styles.linkSecondary} onClick={handleClose}>
-                            Log in
-                        </Link>
-                        <PrimaryButton href="/register" onClick={handleClose}>
-                            Sign up
-                        </PrimaryButton>
+                        {user ? (
+                            <>
+                                <Link href={profileHref} className={styles.linkSecondary} onClick={handleClose}>
+                                    {firstName}
+                                </Link>
+                                <button type="button" onClick={handleSignOut} className={styles.linkSecondary}>
+                                    Sign out
+                                </button>
+                            </>
+                        ) : (
+                            <>
+                                <Link href="/login" className={styles.linkSecondary} onClick={handleClose}>
+                                    Log in
+                                </Link>
+                                <PrimaryButton href="/register" onClick={handleClose}>
+                                    Sign up
+                                </PrimaryButton>
+                            </>
+                        )}
                     </div>
                 </aside>
             </div>

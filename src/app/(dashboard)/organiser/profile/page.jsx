@@ -1,6 +1,9 @@
-import { CURRENT_USER } from '@/lib/mock/currentUser';
+import { redirect } from 'next/navigation';
+import { getCurrentUser } from '@/lib/auth/getCurrentUser';
 import PersonalInfo from '@/components/profile/PersonalInfo';
 
-export default function OrganiserProfilePage() {
-  return <PersonalInfo user={CURRENT_USER} />;
+export default async function OrganiserProfilePage() {
+  const user = await getCurrentUser();
+  if (!user) redirect('/login');
+  return <PersonalInfo user={user} />;
 }

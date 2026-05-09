@@ -2,19 +2,53 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import Logo from '@/components/ui/Logo';
 import BackButton from '@/components/ui/BackButton';
 import PrimaryButton from '@/components/ui/PrimaryButton';
 import styles from './style.module.css';
 
 export default function LoginForm() {
+    const router = useRouter();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
 
-    function handleSubmit(e) {
+    async function handleSubmit(e) {
         e.preventDefault();
+        setError('');
+        setLoading(true);
+
+        try {
+            const res = await fetch('/api/auth/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password }),
+            });
+
+            if (!res.ok) {
+                const body = await res.json().catch(() => ({}));
+                setError(body.error || 'Login failed');
+                setLoading(false);
+                return;
+            }
+
+            // Read /me to know the role for the redirect target.
+            const meRes = await fetch('/api/auth/me');
+            const me = meRes.ok ? await meRes.json() : null;
+
+            const dest =
+                me?.role === 'organiser' ? '/organiser/events' :
+                me?.role === 'admin'     ? '/' :
+                                           '/attendee/events';
+
+            router.push(dest);
+            router.refresh();
+        } catch (err) {
+            setError('Network error. Please try again.');
+            setLoading(false);
+        }
     }
 
     return (
