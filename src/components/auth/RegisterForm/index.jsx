@@ -2,13 +2,12 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import Logo from '@/components/ui/Logo';
+import BackButton from '@/components/ui/BackButton';
+import PrimaryButton from '@/components/ui/PrimaryButton';
 import styles from './style.module.css';
-import {IoIosArrowBack} from "react-icons/io";
 
 export default function RegisterForm() {
-    const router = useRouter();
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -24,13 +23,7 @@ export default function RegisterForm() {
     return (
         <div className={styles.screen}>
             <div className={styles.topBar}>
-                <button
-                    onClick={() => router.back()}
-                    className={styles.backBtn}
-                >
-                    <IoIosArrowBack size={32} />
-                    <span>Back</span>
-                </button>
+                <BackButton />
             </div>
 
             <div className={styles.content}>
@@ -114,9 +107,9 @@ export default function RegisterForm() {
                         </div>
                     </div>
 
-                    <button type="submit" className={styles.submitBtn} disabled={loading}>
+                    <PrimaryButton type="submit" disabled={loading} className={styles.submitBtn}>
                         {loading ? 'Creating account...' : 'Create account'}
-                    </button>
+                    </PrimaryButton>
                 </form>
 
                 <p className={styles.switchText}>

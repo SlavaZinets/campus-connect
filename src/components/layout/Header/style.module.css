@@ -103,24 +103,6 @@
     border-color: var(--taupe);
 }
 
-.linkPrimary {
-    color: var(--white);
-    font-family: var(--font-body), sans-serif;
-    font-size: var(--fs-body-m);
-    font-weight: var(--fw-semibold);
-    padding: 8px 16px;
-    border-radius: 12px;
-    background-color: var(--coral);
-    border: 1px solid var(--coral);
-    transition: background-color .15s ease-out, border-color .15s ease-out;
-}
-
-.linkPrimary:hover {
-    color: var(--white);
-    background-color: var(--coral-deep);
-    border-color: var(--coral-deep);
-}
-
 .overlay {
     position: fixed;
     inset: 0;

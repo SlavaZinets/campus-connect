@@ -3,6 +3,7 @@
 import {useEffect, useState} from 'react';
 import Link from 'next/link';
 import Logo from '@/components/ui/Logo';
+import PrimaryButton from '@/components/ui/PrimaryButton';
 import styles from './style.module.css';
 import {RxHamburgerMenu} from "react-icons/rx";
 import {IoMdClose} from "react-icons/io";
@@ -40,7 +41,7 @@ export default function Header() {
                         </ul>
                         <div className={styles.desktopActions}>
                             <Link href="/login" className={styles.linkSecondary}>Log in</Link>
-                            <Link href="/register" className={styles.linkPrimary}>Sign up</Link>
+                            <PrimaryButton href="/register">Sign up</PrimaryButton>
                         </div>
                     </nav>
 
@@ -90,9 +91,9 @@ export default function Header() {
                         <Link href="/login" className={styles.linkSecondary} onClick={handleClose}>
                             Log in
                         </Link>
-                        <Link href="/register" className={styles.linkPrimary} onClick={handleClose}>
+                        <PrimaryButton href="/register" onClick={handleClose}>
                             Sign up
-                        </Link>
+                        </PrimaryButton>
                     </div>
                 </aside>
             </div>

@@ -1,14 +1,13 @@
 'use client';
 
-import {useState} from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
-import {useRouter} from 'next/navigation';
 import Logo from '@/components/ui/Logo';
+import BackButton from '@/components/ui/BackButton';
+import PrimaryButton from '@/components/ui/PrimaryButton';
 import styles from './style.module.css';
-import {IoIosArrowBack} from "react-icons/io";
 
 export default function LoginForm() {
-    const router = useRouter();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
@@ -18,20 +17,15 @@ export default function LoginForm() {
         e.preventDefault();
     }
 
-    return (<div className={styles.screen}>
+    return (
+        <div className={styles.screen}>
             <div className={styles.topBar}>
-                <button
-                    onClick={() => router.back()}
-                    className={styles.backBtn}
-                >
-                    <IoIosArrowBack size={28}/>
-                    <span>Back</span>
-                </button>
+                <BackButton />
             </div>
 
             <div className={styles.content}>
                 <div className={styles.logoWrap}>
-                    <Logo/>
+                    <Logo />
                 </div>
 
                 <div className={styles.heading}>
@@ -68,9 +62,9 @@ export default function LoginForm() {
                         />
                     </div>
 
-                    <button type="submit" className={styles.submitBtn} disabled={loading}>
+                    <PrimaryButton type="submit" disabled={loading} className={styles.submitBtn}>
                         {loading ? 'Signing in...' : 'Sign in'}
-                    </button>
+                    </PrimaryButton>
                 </form>
 
                 <p className={styles.switchText}>
@@ -78,5 +72,6 @@ export default function LoginForm() {
                     <Link href="/register" className={styles.switchLink}>Sign up</Link>
                 </p>
             </div>
-        </div>);
+        </div>
+    );
 }

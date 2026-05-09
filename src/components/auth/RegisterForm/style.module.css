@@ -10,28 +10,6 @@
     padding: 20px 20px 0;
 }
 
-.backBtn {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    background: transparent;
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 8px 14px;
-    color: var(--ink);
-    font-family: var(--font-body), sans-serif;
-    font-size: var(--fs-body-s);
-    font-weight: var(--fw-medium);
-    cursor: pointer;
-    transition: background-color 150ms ease-out, border-color 150ms ease-out, color 150ms ease-out;
-}
-
-.backBtn:hover {
-    background-color: var(--paper);
-    border-color: var(--taupe);
-    color: var(--coral);
-}
-
 .content {
     flex: 1;
     width: 100%;
@@ -141,21 +119,7 @@
 .submitBtn {
     width: 100%;
     padding: 14px 24px;
-    border-radius: 12px;
-    background-color: var(--coral);
-    color: var(--white);
-    font-family: var(--font-body), sans-serif;
-    font-size: var(--fs-body-m);
-    font-weight: var(--fw-semibold);
-    border: 1px solid var(--coral);
-    cursor: pointer;
-    transition: background-color 150ms ease-out, border-color 150ms ease-out;
     margin-top: 8px;
-}
-
-.submitBtn:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
 }
 
 .switchText {
