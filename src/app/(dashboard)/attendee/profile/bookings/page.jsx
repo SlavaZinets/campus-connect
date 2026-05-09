@@ -22,7 +22,11 @@ export default function BookedEventsPage() {
       <h2 className={styles.title}>Booked events</h2>
       <div className={styles.grid}>
         {bookedEvents.map(event => (
-          <EventCard key={event.id} event={event} />
+          <EventCard
+            key={event.id}
+            event={event}
+            linkHref={`/attendee/bookings/${event.id}`}
+          />
         ))}
       </div>
     </section>

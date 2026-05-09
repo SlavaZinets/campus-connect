@@ -6,11 +6,12 @@ import CapacityBar from '@/components/events/CapacityBar';
 import LikeButton from '@/components/ui/LikeButton';
 
 
-export default function EventCard({ event }) {
+export default function EventCard({ event, linkHref }) {
   const { id, title, photo, category, location, start_at, capacity, booked } = event;
+  const href = linkHref ?? `/attendee/events/${id}`;
 
   return (
-    <Link href={`/attendee/events/${id}`} className={styles.cardLink}>
+    <Link href={href} className={styles.cardLink}>
       <article className={styles.card}>
         {photo && (
           <div className={styles.photoWrap}>
