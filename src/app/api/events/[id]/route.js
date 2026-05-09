@@ -5,18 +5,35 @@ import { validateRequired } from '@/lib/validators';
 
 export async function GET(req, { params }) {
     try {
-        const { id } = params;
+        const { id } = await params;
 
-        const [result] = await pool.query(
-            'SELECT * FROM events WHERE id = ?',
-            [id]
-        );
+        // JOIN categories + users so the response uses human names matching the UI.
+        // LEFT JOIN bookings (filtered to confirmed) and COUNT for the booked total —
+        // events table has no booked column.
+        const sql = `
+            SELECT
+                events.*,
+                categories.name AS category,
+                users.name      AS organiser,
+                COUNT(CASE WHEN bookings.status = 'confirmed' THEN 1 END) AS booked
+            FROM events
+            JOIN categories      ON events.category_id  = categories.id
+            JOIN users           ON events.organiser_id = users.id
+            LEFT JOIN bookings   ON bookings.event_id   = events.id
+            WHERE events.id = ?
+            GROUP BY events.id
+        `;
 
-        if (result.length === 0) return NextResponse.json({error: 'Event not found'}, {status: 404});
+        const [result] = await pool.query(sql, [id]);
 
-        return NextResponse.json(result[0], {status: 200});
+        if (result.length === 0) {
+            return NextResponse.json({ error: 'Event not found' }, { status: 404 });
+        }
+
+        return NextResponse.json(result[0], { status: 200 });
     } catch (error) {
-        return NextResponse.json({error: 'Internal Server Error'}, {status: 500});
+        console.error('GET /api/events/[id] failed:', error);
+        return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
     }
 }
 

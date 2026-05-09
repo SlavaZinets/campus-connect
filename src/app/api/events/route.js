@@ -6,31 +6,47 @@ import { validateRequired } from '@/lib/validators';
 
 export async function GET(req) {
     try {
-        const [rows] = await pool.query(
-            'SELECT * FROM events'
-        );
+        const { searchParams } = new URL(req.url);
+        const search   = searchParams.get('search');
+        const category = searchParams.get('category');
+        const date     = searchParams.get('date');
 
-        if (rows.length === 0) return NextResponse.json([], {status: 200});
+        // Build WHERE clauses dynamically with parameterised args 
+        const where = [];
+        const args  = [];
 
-        return NextResponse.json(rows, {status: 200});
+        if (search) {
+            where.push('events.title LIKE ?');
+            args.push(`%${search}%`);
+        }
+        if (category) {
+            where.push('categories.name = ?');
+            args.push(category);
+        }
+        if (date) {
+            where.push('DATE(events.start_at) = ?');
+            args.push(date);
+        }
+
+        // JOIN categories + users so the UI receives `category` and `organiser`
+        // as human-readable names instead of raw FK ids.
+        const sql = `
+            SELECT
+                events.*,
+                categories.name AS category,
+                users.name      AS organiser
+            FROM events
+            JOIN categories ON events.category_id  = categories.id
+            JOIN users      ON events.organiser_id = users.id
+            ${where.length ? 'WHERE ' + where.join(' AND ') : ''}
+            ORDER BY events.start_at ASC
+        `;
+
+        const [rows] = await pool.query(sql, args);
+        return NextResponse.json(rows, { status: 200 });
     } catch (error) {
-        // TEMPORARY DEBUG — revert before merging.
         console.error('GET /api/events failed:', error);
-        return NextResponse.json(
-            {
-                error: 'Internal Server Error',
-                detail: error?.message,
-                code: error?.code,
-                env: {
-                    DB_HOST: process.env.DB_HOST,
-                    DB_USER: process.env.DB_USER,
-                    DB_NAME: process.env.DB_NAME,
-                    PW_LEN: process.env.DB_PASSWORD?.length,
-                    PW_CODES: Array.from(process.env.DB_PASSWORD ?? '').map(c => c.charCodeAt(0)),
-                },
-            },
-            { status: 500 }
-        );
+        return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
     }
 }
 

@@ -68,13 +68,19 @@ const MOCK_EVENTS = [
 
 export default async function EventsPage({ searchParams }) {
   
-  // const params = new URLSearchParams(searchParams);
-  // const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/events?${params}`);
-  // const events = await res.json();
+  const sp = await searchParams;
 
-  // const events = MOCK_EVENTS;
+  
+  
+  const params = new URLSearchParams();
+  if (sp?.search)   params.set('search', sp.search);
+  if (sp?.category) params.set('category', sp.category);
+  if (sp?.date)     params.set('date', sp.date);
 
-  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/events`, { cache: 'no-store' });
+  const qs = params.toString();
+  const url = `${process.env.NEXT_PUBLIC_BASE_URL}/api/events${qs ? `?${qs}` : ''}`;
+
+  const res = await fetch(url, { cache: 'no-store' });
   if (!res.ok) {
     throw new Error(`Failed to fetch events: ${res.status}`);
   }
