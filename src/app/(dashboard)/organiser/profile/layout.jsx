@@ -1,13 +1,7 @@
 import Link from 'next/link';
 import { CURRENT_USER } from '@/lib/mock/currentUser';
-import ProfileTabs from '@/components/profile/ProfileTabs';
 import ProfileSidebar from '@/components/profile/ProfileSidebar';
 import styles from './layout.module.css';
-
-const ORGANISER_TABS = [
-  { href: '/organiser/profile',        label: 'Personal information' },
-  { href: '/organiser/profile/events', label: 'Created events' },
-];
 
 export default function OrganiserProfileLayout({ children }) {
   const user = CURRENT_USER;
@@ -17,7 +11,6 @@ export default function OrganiserProfileLayout({ children }) {
       <div className="container">
         <header className={styles.topRow}>
           <h1 className={styles.greeting}>Hello, {user.firstName}</h1>
-          <ProfileTabs tabs={ORGANISER_TABS} />
         </header>
 
         <div className={styles.divider} />
