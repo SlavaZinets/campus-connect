@@ -1,0 +1,162 @@
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 32px 24px;
+}
+
+/* avatar (clickable) */
+.avatarWrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.avatarButton {
+  position: relative;
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  background-color: var(--paper);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--warm-gray);
+  padding: 0;
+  cursor: pointer;
+  overflow: hidden;
+  transition: border-color 150ms ease-out, transform 150ms ease-out;
+}
+
+.avatarButton:hover {
+  border-color: var(--coral);
+}
+
+.avatarButton:focus-visible {
+  outline: 2px solid var(--coral);
+  outline-offset: 3px;
+}
+
+.avatarButton :global(.material-symbols-outlined) {
+  font-size: 140px;
+  font-variation-settings: 'wght' 300, 'opsz' 48;
+}
+
+.avatarImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* hover overlay ("Change") */
+.avatarOverlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(61, 57, 41, 0.55);
+  color: var(--white);
+  font-family: var(--font-body);
+  font-size: var(--fs-body-m);
+  font-weight: var(--fw-medium);
+  opacity: 0;
+  transition: opacity 150ms ease-out;
+}
+
+.avatarButton:hover .avatarOverlay,
+.avatarButton:focus-visible .avatarOverlay {
+  opacity: 1;
+}
+
+/* hidden file input — visually gone, still focusable via the button click */
+.fileInput {
+  display: none;
+}
+
+.error {
+  font-size: var(--fs-body-s);
+  color: var(--rust);
+  margin: 0;
+  text-align: center;
+  max-width: 200px;
+}
+
+/* name + email */
+.name {
+  font-family: var(--font-display);
+  font-size: var(--fs-h2);
+  font-weight: var(--fw-semibold);
+  color: var(--ink);
+  margin: 8px 0 0;
+  text-align: center;
+}
+
+.email {
+  font-size: var(--fs-body-m);
+  color: var(--warm-gray);
+  margin: 0;
+  text-align: center;
+}
+
+/* sign out */
+.signOut {
+  margin-top: 16px;
+  background: none;
+  border: none;
+  padding: 0;
+  font-family: var(--font-body);
+  font-size: var(--fs-body-m);
+  font-weight: var(--fw-semibold);
+  color: var(--coral);
+  cursor: pointer;
+  transition: color 150ms ease-out;
+}
+
+.signOut:hover {
+  color: var(--coral-deep);
+}
+
+.signOut:focus-visible {
+  outline: 2px solid var(--coral);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    padding: 16px;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .avatarButton {
+    width: 80px;
+    height: 80px;
+  }
+
+  .avatarButton :global(.material-symbols-outlined) {
+    font-size: 64px;
+  }
+
+  .avatarOverlay {
+    font-size: var(--fs-body-s);
+  }
+
+  .name,
+  .email {
+    text-align: left;
+    margin: 0;
+  }
+
+  .signOut {
+    margin-top: 0;
+    margin-left: auto;
+  }
+}
