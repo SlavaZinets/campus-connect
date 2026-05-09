@@ -72,7 +72,13 @@ export default async function EventsPage({ searchParams }) {
   // const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/events?${params}`);
   // const events = await res.json();
 
-  const events = MOCK_EVENTS;
+  // const events = MOCK_EVENTS;
+
+  const res = await fetch('api/events', {cache: 'no-store'});
+  if (!res.ok) {
+    throw new Error('Failed to fetch events: ${res.status}');
+  }  
+  const events = await res.json();
 
   return (
     <main>
