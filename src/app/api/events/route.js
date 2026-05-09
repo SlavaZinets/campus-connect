@@ -11,10 +11,26 @@ export async function GET(req) {
         );
 
         if (rows.length === 0) return NextResponse.json([], {status: 200});
-        
-        return NextResponse.json(rows, {status: 200});    
+
+        return NextResponse.json(rows, {status: 200});
     } catch (error) {
-        return NextResponse.json({error: 'Internal Server Error'}, {status: 500});
+        // TEMPORARY DEBUG — revert before merging.
+        console.error('GET /api/events failed:', error);
+        return NextResponse.json(
+            {
+                error: 'Internal Server Error',
+                detail: error?.message,
+                code: error?.code,
+                env: {
+                    DB_HOST: process.env.DB_HOST,
+                    DB_USER: process.env.DB_USER,
+                    DB_NAME: process.env.DB_NAME,
+                    PW_LEN: process.env.DB_PASSWORD?.length,
+                    PW_CODES: Array.from(process.env.DB_PASSWORD ?? '').map(c => c.charCodeAt(0)),
+                },
+            },
+            { status: 500 }
+        );
     }
 }
 
