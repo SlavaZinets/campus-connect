@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 import EventCard from '@/components/events/EventCard';
 import FilterBar from '@/components/events/FilterBar';
 import styles from './page.module.css';
@@ -90,7 +91,9 @@ export default async function EventsPage({ searchParams }) {
     <main>
       <div className="container">
         <h1 className={styles.title}>Events</h1>
-        <FilterBar />
+        <Suspense fallback={null}>
+          <FilterBar />
+        </Suspense>
         <div className={styles.grid}>
           {events.map(e => <EventCard key={e.id} event={e} />)}
         </div>
