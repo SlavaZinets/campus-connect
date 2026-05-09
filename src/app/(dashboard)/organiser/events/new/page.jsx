@@ -6,7 +6,7 @@ export default function NewEventPage() {
   return (
     <main className={styles.main}>
       <div className="container">
-        <Link href="/organiser/profile/events" className={styles.back}>
+        <Link href="/organiser/events" className={styles.back}>
           <span className="material-symbols-outlined" aria-hidden="true">arrow_back</span>
           Back to my events
         </Link>

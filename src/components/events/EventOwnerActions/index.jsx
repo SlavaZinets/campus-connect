@@ -19,7 +19,7 @@ export default function EventOwnerActions({ eventId }) {
     setDeleting(true);
     // TODO: DELETE /api/events/[id]
     console.log('TODO: delete event', eventId);
-    router.push('/organiser/profile/events');
+    router.push('/organiser/events');
     router.refresh();
   }
 

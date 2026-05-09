@@ -41,7 +41,7 @@ export default function EventForm({ mode = 'create', initialValues }) {
     }
 
     // Optimistic UX: bounce back to the organiser dashboard
-    router.push('/organiser/profile/events');
+    router.push('/organiser/events');
     router.refresh();
   }
 

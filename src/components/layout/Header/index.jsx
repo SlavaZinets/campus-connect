@@ -9,12 +9,6 @@ import styles from './style.module.css';
 import {RxHamburgerMenu} from "react-icons/rx";
 import {IoMdClose} from "react-icons/io";
 
-const NAV_LINKS = [
-    {href: '/', label: 'Home'},
-    {href: '/events', label: 'Events'},
-    {href: '/attendee/bookings', label: 'My Bookings'},
-];
-
 export default function Header() {
     const router = useRouter();
     const [isOpen, setIsOpen] = useState(false);
@@ -38,8 +32,15 @@ export default function Header() {
         router.refresh();
     }
 
+    // Role-aware destinations. Defaults to /attendee/* when logged out.
+    const eventsHref  = user?.role === 'organiser' ? '/organiser/events'  : '/attendee/events';
     const profileHref = user?.role === 'organiser' ? '/organiser/profile' : '/attendee/profile';
-    const firstName = user?.name ? user.name.split(' ')[0] : '';
+    const firstName   = user?.name ? user.name.split(' ')[0] : '';
+
+    const navLinks = [
+        { href: '/',          label: 'Home' },
+        { href: eventsHref,   label: 'Events' },
+    ];
 
     return (
 
@@ -50,7 +51,7 @@ export default function Header() {
 
                     <nav className={styles.desktopNav}>
                         <ul className={styles.desktopList}>
-                            {NAV_LINKS.map((link) => (
+                            {navLinks.map((link) => (
                                 <li key={link.href}>
                                     <Link href={link.href} className={styles.desktopLink}>
                                         {link.label}
@@ -105,7 +106,7 @@ export default function Header() {
 
                     <nav>
                         <ul className={styles.sidebarList}>
-                            {NAV_LINKS.map((link) => (
+                            {navLinks.map((link) => (
                                 <li key={link.href}>
                                     <Link
                                         href={link.href}
