@@ -7,6 +7,34 @@ export async function GET(req) {
         const session = await getSession(req);
         if(!session) return NextResponse.json({error: 'Unauthorised'}, {status: 401});
 
+        // Admin sees every booking with attendee details; everyone else only sees their own.
+        if (session.role === 'admin') {
+            const adminSql = `
+                SELECT
+                    bookings.id           AS booking_id,
+                    bookings.status,
+                    bookings.booked_at,
+                    bookings.user_id,
+                    events.id             AS event_id,
+                    events.title,
+                    events.location,
+                    events.start_at,
+                    events.capacity,
+                    categories.name       AS category,
+                    organiser.name        AS organiser,
+                    attendee.name         AS attendee_name,
+                    attendee.email        AS attendee_email
+                FROM bookings
+                JOIN events     ON bookings.event_id      = events.id
+                JOIN categories ON events.category_id     = categories.id
+                JOIN users organiser ON events.organiser_id = organiser.id
+                JOIN users attendee  ON bookings.user_id    = attendee.id
+                ORDER BY bookings.booked_at DESC
+            `;
+            const [adminRows] = await pool.query(adminSql);
+            return NextResponse.json(adminRows, {status: 200});
+        }
+
         const sql = `
             SELECT
                 bookings.id           AS booking_id,

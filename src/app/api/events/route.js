@@ -75,22 +75,22 @@ export async function POST(req) {
         if (requiredError) return NextResponse.json({error: requiredError}, {status: 400});
 
        
+        const toMysqlDt = (v) => v ? v.replace('T', ' ') : null;
+
         const sql = `
-            INSERT INTO events 
-            (organiser_id, title, description, location, category_id, start_at, end_at, capacity, booked, photo) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, 0, ?)
+            INSERT INTO events
+            (organiser_id, title, description, location, category_id, start_at, capacity)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
         `;
 
         const [result] = await pool.query(sql, [
-            session.id, 
-            title, 
-            description, 
-            location, 
-            category_id, 
-            start_at, 
-            end_at || null, 
-            capacity, 
-            photo || null   
+            session.id,
+            title,
+            description,
+            location,
+            category_id,
+            toMysqlDt(start_at),
+            capacity,
         ]);
 
         return NextResponse.json({

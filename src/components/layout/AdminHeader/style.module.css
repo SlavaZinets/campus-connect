@@ -1,4 +1,4 @@
-Add .header {
+.header {
     position: sticky;
     top: 0;
     z-index: 50;
@@ -9,8 +9,40 @@ Add .header {
 
 .inner {
     display: flex;
+    flex-direction: column;
+    gap: 10px;
     align-items: center;
-    gap: 16px;
     width: 100%;
     padding: 12px 0;
+}
+
+.logo {
+    padding: 0 20px 10px;
+    border-bottom: 1px solid var(--border);
+}
+
+.text {
+    width: 100%;
+    margin: 0;
+    text-align: center;
+    color: var(--ink);
+    font-size: var(--fs-body-l);
+    font-weight: var(--fw-semibold);
+}
+
+@media screen and (min-width: 768px) {
+    .inner {
+        flex-direction: row;
+        gap: 20px;
+    }
+    .logo {
+        padding: 0 ;
+        border-bottom: none;
+    }
+
+    .text {
+        width: fit-content;
+        padding-left: 20px;
+        border-left: 2px solid var(--border);
+    }
 }

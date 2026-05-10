@@ -1,0 +1,218 @@
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    padding: 32px 24px 24px;
+}
+
+.heading {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.title {
+    font-family: var(--font-display);
+    font-size: var(--fs-h2);
+    font-weight: var(--fw-semibold);
+    color: var(--ink);
+    line-height: var(--lh-h2);
+    margin: 0;
+}
+
+.subtitle {
+    font-size: var(--fs-body-s);
+    color: var(--warm-gray);
+    margin: 0;
+}
+
+.row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.stack {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.label {
+    font-size: var(--fs-body-s);
+    font-weight: var(--fw-medium);
+    color: var(--ink);
+}
+
+.optional {
+    font-weight: var(--fw-regular);
+    color: var(--warm-gray);
+}
+
+.input {
+    background-color: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 12px;
+    color: var(--ink);
+    font-family: var(--font-body);
+    font-size: var(--fs-body-m);
+    transition: border-color 150ms ease-out, box-shadow 150ms ease-out;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.input:focus {
+    outline: none;
+    border-color: var(--coral);
+    box-shadow: 0 0 0 3px rgba(201, 100, 66, 0.18);
+}
+
+.textarea {
+    background-color: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 12px;
+    color: var(--ink);
+    font-family: var(--font-body);
+    font-size: var(--fs-body-m);
+    resize: vertical;
+    transition: border-color 150ms ease-out, box-shadow 150ms ease-out;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.textarea:focus {
+    outline: none;
+    border-color: var(--coral);
+    box-shadow: 0 0 0 3px rgba(201, 100, 66, 0.18);
+}
+
+.error {
+    margin: 0;
+    font-size: var(--fs-body-s);
+    font-weight: var(--fw-medium);
+    color: var(--rust);
+    background-color: rgba(184, 86, 56, 0.08);
+    border: 1px solid var(--rust);
+    border-radius: 8px;
+    padding: 10px 14px;
+}
+
+.actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    margin-top: 4px;
+}
+
+.deleteTrigger {
+    background-color: transparent;
+    border: none;
+    color: var(--rust);
+    font-family: var(--font-body);
+    font-size: var(--fs-body-s);
+    font-weight: var(--fw-medium);
+    cursor: pointer;
+    padding: 8px 4px;
+    border-radius: 6px;
+}
+
+.deleteTrigger:hover:not(:disabled) {
+    text-decoration: underline;
+}
+
+.deleteTrigger:focus-visible {
+    outline: 2px solid var(--rust);
+    outline-offset: 2px;
+}
+
+.deleteTrigger:disabled {
+    color: var(--warm-gray);
+    cursor: not-allowed;
+}
+
+.saveBtn {
+    background-color: var(--coral);
+    color: var(--white);
+    font-family: var(--font-body);
+    font-size: var(--fs-body-m);
+    font-weight: var(--fw-medium);
+    padding: 12px 24px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: background-color 150ms ease-out;
+}
+
+.saveBtn:hover:not(:disabled) {
+    background-color: var(--coral-deep);
+}
+
+.saveBtn:disabled {
+    background-color: var(--border);
+    color: var(--warm-gray);
+    cursor: not-allowed;
+}
+
+.confirmBlock {
+    background-color: rgba(184, 86, 56, 0.06);
+    border: 1px solid rgba(184, 86, 56, 0.25);
+    border-radius: 12px;
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.confirmText {
+    margin: 0;
+    font-size: var(--fs-body-s);
+    font-weight: var(--fw-medium);
+    color: var(--ink);
+}
+
+.confirmRow {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+}
+
+.cancelBtn {
+    background-color: var(--paper);
+    color: var(--ink);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 14px;
+    font-family: var(--font-body);
+    font-size: var(--fs-body-s);
+    font-weight: var(--fw-medium);
+    cursor: pointer;
+    transition: background-color 150ms ease-out;
+}
+
+.deleteBtn {
+    background-color: var(--rust);
+    color: var(--white);
+    border: none;
+    border-radius: 8px;
+    padding: 8px 14px;
+    font-family: var(--font-body);
+    font-size: var(--fs-body-s);
+    font-weight: var(--fw-medium);
+    cursor: pointer;
+    transition: background-color 150ms ease-out;
+}
+
+.deleteBtn:disabled {
+    background-color: var(--border);
+    color: var(--warm-gray);
+    cursor: not-allowed;
+}
