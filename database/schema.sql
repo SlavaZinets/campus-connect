@@ -16,6 +16,9 @@ CREATE TABLE IF NOT EXISTS users(
     email VARCHAR(255) NOT NULL UNIQUE,
     password_hash VARCHAR(255) NOT NULL,
     role ENUM('attendee', 'organiser', 'admin') NOT NULL,
+    phone_number VARCHAR(20),
+    date_of_birth DATE,
+    avatar_img LONGTEXT,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -26,8 +29,13 @@ CREATE TABLE IF NOT EXISTS events (
     description TEXT,
     category_id int UNSIGNED NOT NULL,
     location VARCHAR(255) NOT NULL,
+    lat DECIMAL(10, 8),
+    lng DECIMAL(11, 8),
     start_at DATETIME NOT NULL,
+    end_at DATETIME,
     capacity SMALLINT UNSIGNED NOT NULL,
+    booked SMALLINT UNSIGNED NOT NULL DEFAULT 0;
+    photo LONGTEXT, 
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT fk_events_organiser FOREIGN KEY (organiser_id) REFERENCES users(id),
     CONSTRAINT fk_events_category FOREIGN KEY (category_id) REFERENCES categories(id)

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
@@ -26,6 +26,7 @@ export default function BookingDetail({ event }) {
     title,
     photo,
     category,
+    status,
     location,
     start_at,
     end_at,
@@ -35,6 +36,8 @@ export default function BookingDetail({ event }) {
     lng,
   } = event;
 
+
+
   const hasCoords = typeof lat === 'number' && typeof lng === 'number';
   const mapSrc = hasCoords
     ? `https://www.openstreetmap.org/export/embed.html?bbox=${lng - 0.005}%2C${lat - 0.003}%2C${lng + 0.005}%2C${lat + 0.003}&layer=mapnik&marker=${lat}%2C${lng}`
@@ -43,13 +46,43 @@ export default function BookingDetail({ event }) {
   const pinX = 20 + ((id * 37) % 60);
   const pinY = 20 + ((id * 53) % 60);
 
-  async function handleCancel() {
-    setCancelling(true);
-    // TODO: PATCH /api/bookings/[id] { status: 'cancelled' }
-    console.log('TODO: cancel booking for event', id);
-    router.push('/attendee/profile/bookings');
+  async function handleBookingUpdate(newStatus) {
+    setCancelling(true); 
+
+
+    try {
+      const res = await fetch(`/api/bookings/${event.booking_id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: newStatus }), 
+      });
+
+      if (res.status === 401) {
+        
+        setCancelling(false);
+        return;
+      }
+      if (res.status === 403) {
+        const action = newStatus === 'cancelled' ? 'cancel' : 'book';
+        
+        setCancelling(false);
+        return;
+      }
+      if (!res.ok) {
+        throw new Error(`PATCH /api/bookings/${event.booking_id} failed: ${res.status}`);
+      }
+
+    } catch (err) {
+      console.error('Something went wrong. Please try again.', err);
+      setCancelling(false);
+    }
+    setConfirmOpen(false); 
+    setCancelling(false);  
     router.refresh();
   }
+  
+
+
 
   return (
     <main className={styles.main}>
@@ -135,7 +168,7 @@ export default function BookingDetail({ event }) {
               </div>
             )}
 
-            <button
+            {<button
               type="button"
               onClick={() => setTicketOpen(true)}
               className={styles.ticketCard}
@@ -148,14 +181,16 @@ export default function BookingDetail({ event }) {
                 <span className={styles.ticketCardTitle}>Ticket</span>
                 <span className={styles.ticketCardLink}>View ticket</span>
               </span>
-            </button>
+            </button>}
 
             <button
               type="button"
               onClick={() => setConfirmOpen(true)}
               className={styles.cancelBtn}
+
             >
-              Cancel ticket
+              {status === 'cancelled' ? 'Book again' : 'Cancel ticket'}
+
             </button>
           </aside>
         </div>
@@ -171,9 +206,9 @@ export default function BookingDetail({ event }) {
               <span className="material-symbols-outlined">confirmation_number</span>
             </div>
 
-            <div className={styles.ticketBadge}>
+            <div className={status === 'cancelled' ? styles.ticketBadgeCancelled : styles.ticketBadge}>
               <span className="material-symbols-outlined" aria-hidden="true">check_circle</span>
-              Confirmed
+              {status === 'cancelled' ? 'Cancelled' : 'Confirmed'}
             </div>
 
             <h2 className={styles.ticketViewTitle}>{title}</h2>
@@ -207,9 +242,9 @@ export default function BookingDetail({ event }) {
           </div>
         </Modal>
 
-        {/* Cancel confirmation modal */}
+        
         <Modal
-          open={confirmOpen}
+          open={confirmOpen && status !== 'cancelled'}
           onClose={() => setConfirmOpen(false)}
           ariaLabel="Confirm ticket cancellation"
         >
@@ -228,11 +263,40 @@ export default function BookingDetail({ event }) {
               </button>
               <button
                 type="button"
-                onClick={handleCancel}
+                onClick={() =>  handleBookingUpdate('cancelled')}
                 disabled={cancelling}
                 className={styles.confirmCancelBtn}
               >
                 {cancelling ? 'Cancelling…' : 'Yes, cancel'}
+              </button>
+            </div>
+          </div>
+        </Modal>
+        <Modal
+          open={confirmOpen && status === 'cancelled'}
+          onClose={() => setConfirmOpen(false)}
+          ariaLabel="Confirm ticket cancellation"
+        >
+          <div className={styles.confirm}>
+            <h2 className={styles.confirmTitle}>Book ticket again?</h2>
+            <p className={styles.confirmBody}>
+              This will book you a ticket for this event again, if there&apos;s still capacity.
+            </p>
+            <div className={styles.confirmActions}>
+              <button
+                type="button"
+                onClick={() => setConfirmOpen(false)}
+                className={styles.keepBtn}
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={() => handleBookingUpdate('confirmed')}
+                disabled={cancelling}
+                className={styles.confirmCancelBtn}
+              >
+                {cancelling ? 'Cancelling…' : 'Yes, book again'}
               </button>
             </div>
           </div>

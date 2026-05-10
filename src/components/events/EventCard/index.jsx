@@ -7,7 +7,7 @@ import LikeButton from '@/components/ui/LikeButton';
 
 
 export default function EventCard({ event, linkHref }) {
-  const { id, title, photo, category, location, start_at, capacity, booked } = event;
+  const { id, title, photo, location, start_at, capacity, booked } = event;
   const href = linkHref ?? `/attendee/events/${id}`;
 
   return (

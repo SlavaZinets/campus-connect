@@ -57,20 +57,52 @@ export async function POST(req) {
         if (session.role !== 'organiser') return NextResponse.json({error: 'Forbidden'}, {status: 403});
 
         const body = await req.json();
-        const {title, description, location, category_id, start_at, capacity} = body;
+        
+       
+        const {
+            title, 
+            description, 
+            location, 
+            category_id, 
+            start_at, 
+            end_at,   // Added this
+            capacity, 
+            photo 
+        } = body;
 
+       
         const requiredError = validateRequired({title, description, location, category_id, start_at, capacity});
         if (requiredError) return NextResponse.json({error: requiredError}, {status: 400});
 
-        const [result] = await pool.query(
-            'INSERT INTO events (organiser_id, title, description, location, category_id, start_at, capacity) VALUES (?, ?, ?, ?, ?, ?, ?)',
-            [session.id, title, description, location, category_id, start_at, capacity] 
-        );
+       
+        const sql = `
+            INSERT INTO events 
+            (organiser_id, title, description, location, category_id, start_at, end_at, capacity, booked, photo) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, 0, ?)
+        `;
 
-        return NextResponse.json({message: 'Event added successfully'}, {status: 201});
+        const [result] = await pool.query(sql, [
+            session.id, 
+            title, 
+            description, 
+            location, 
+            category_id, 
+            start_at, 
+            end_at || null, 
+            capacity, 
+            photo || null   
+        ]);
+
+        return NextResponse.json({
+            message: 'Event added successfully',
+            eventId: result.insertId 
+        }, {status: 201});
 
     } catch (error) {
+       
+        console.error('POST /api/events error:', error);
+        
+       
         return NextResponse.json({error: 'Internal Server Error'}, {status: 500});
     }
 }
-

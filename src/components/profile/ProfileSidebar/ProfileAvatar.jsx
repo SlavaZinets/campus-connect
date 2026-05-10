@@ -1,10 +1,11 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import styles from './index.module.css';
 
 const STORAGE_KEY = 'campusconnect:avatar';
-const MAX_BYTES = 2 * 1024 * 1024; // 2 MB cap to keep localStorage healthy
+
 
 /**
  * Click the avatar -> opens a hidden file input -> shows the chosen image.
@@ -13,53 +14,64 @@ const MAX_BYTES = 2 * 1024 * 1024; // 2 MB cap to keep localStorage healthy
  * TODO: replace localStorage with an API call:
  *   await fetch(`/api/users/${userId}/avatar`, { method: 'POST', body: formData })
  */
-export default function ProfileAvatar({ userId }) {
-  const [src, setSrc] = useState(null);
+export default function ProfileAvatar({ userId, initialAvatar }) {
+  const [isUploading, setIsUploading] = useState(false);
+  const router = useRouter();
+  const [src, setSrc] = useState(initialAvatar || null);
   const [error, setError] = useState(null);
   const fileInputRef = useRef(null);
 
-  // Read previously saved avatar after mount (localStorage is browser-only)
-  useEffect(() => {
-    try {
-      const saved = localStorage.getItem(STORAGE_KEY);
-      if (saved) setSrc(saved);
-    } catch {
-      // localStorage might be disabled (private mode / quota) — silently ignore
-    }
-  }, []);
+  
 
   function openPicker() {
     fileInputRef.current?.click();
   }
 
-  function handleFileChange(e) {
-    const file = e.target.files?.[0];
-    e.target.value = ''; // reset so picking the same file again still triggers change
+
+  async function handleImageUpload(event) {
+    const file = event.target.files[0];
     if (!file) return;
 
-    if (!file.type.startsWith('image/')) {
-      setError('Please choose an image file.');
-      return;
-    }
-    if (file.size > MAX_BYTES) {
-      setError('Image is larger than 2 MB. Please pick a smaller one.');
+    
+    if (file.size > 2 * 1024 * 1024) {
+      alert("File is too large! Please select an image under 2MB");
       return;
     }
 
+    setIsUploading(true);
+
+    
     const reader = new FileReader();
-    reader.onload = () => {
-      const dataUrl = reader.result;
-      setSrc(dataUrl);
-      setError(null);
+    reader.onloadend = async () => {
+      const base64String = reader.result; 
+      setSrc(base64String);
+
       try {
-        localStorage.setItem(STORAGE_KEY, dataUrl);
-      } catch {
-        // Quota exceeded — image too big once base64-encoded
-        setError('Image is too large to save locally.');
+        
+        const res = await fetch(`/api/users/${userId}/avatar`, {
+          method: 'PATCH', 
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ 
+            avatarBase64: base64String,
+          }), 
+
+        });
+
+        if (!res.ok) throw new Error('Upload failed');
+        
+        // Refresh the page to show the new avatar
+        router.refresh();
+        
+
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setIsUploading(false);
       }
     };
-    reader.onerror = () => setError('Could not read that file.');
-    reader.readAsDataURL(file);
+    
+    // This triggers the onloadend function above
+    reader.readAsDataURL(file); 
   }
 
   return (
@@ -85,7 +97,7 @@ export default function ProfileAvatar({ userId }) {
         ref={fileInputRef}
         type="file"
         accept="image/*"
-        onChange={handleFileChange}
+        onChange={handleImageUpload}
         className={styles.fileInput}
         aria-hidden="true"
         tabIndex={-1}
