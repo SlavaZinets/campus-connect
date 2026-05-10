@@ -16,6 +16,9 @@ CREATE TABLE IF NOT EXISTS users(
     email VARCHAR(255) NOT NULL UNIQUE,
     password_hash VARCHAR(255) NOT NULL,
     role ENUM('attendee', 'organiser', 'admin') NOT NULL,
+    phone_number VARCHAR(20),
+    date_of_birth DATE,
+    avatar_img LONGTEXT,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
