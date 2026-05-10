@@ -14,22 +14,14 @@ const STORAGE_KEY = 'campusconnect:avatar';
  * TODO: replace localStorage with an API call:
  *   await fetch(`/api/users/${userId}/avatar`, { method: 'POST', body: formData })
  */
-export default function ProfileAvatar({ userId }) {
+export default function ProfileAvatar({ userId, initialAvatar }) {
   const [isUploading, setIsUploading] = useState(false);
   const router = useRouter();
-  const [src, setSrc] = useState(null);
+  const [src, setSrc] = useState(initialAvatar || null);
   const [error, setError] = useState(null);
   const fileInputRef = useRef(null);
 
-  // // Read previously saved avatar after mount (localStorage is browser-only)
-  // useEffect(() => {
-  //   try {
-  //     const saved = localStorage.getItem(STORAGE_KEY);
-  //     if (saved) setSrc(saved);
-  //   } catch {
-  //     // localStorage might be disabled (private mode / quota) — silently ignore
-  //   }
-  // }, []);
+  
 
   function openPicker() {
     fileInputRef.current?.click();
@@ -69,10 +61,7 @@ export default function ProfileAvatar({ userId }) {
         
         // Refresh the page to show the new avatar
         router.refresh();
-        if (!res.ok) {
-          const errorData = await res.json(); 
-          throw new Error(`Backend Error ${res.status}: ${errorData.error || errorData.message || 'Unknown error'}`);
-        }
+        
 
       } catch (error) {
         console.error(error);
