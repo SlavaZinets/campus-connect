@@ -49,7 +49,14 @@ export async function PATCH(req, { params }) {
         const { id } = await params;
         const session = await getSession(req);
         if(!session) return NextResponse.json({error: 'Unauthorised'}, {status: 401});
+        
+        const body = await req.json();
+        const { status } = body;
 
+        
+        if (!status) {
+            return NextResponse.json({ error: 'Status is required' }, { status: 400 });
+        }
         const [booking] = await pool.query(
             'SELECT * FROM bookings WHERE id = ?',
             [id]
@@ -60,7 +67,7 @@ export async function PATCH(req, { params }) {
 
         const [updated] = await pool.query(
             'UPDATE bookings SET status = ? WHERE id = ?',
-            ['cancelled', id]
+            [status, id]
         );
 
         return NextResponse.json({message: 'Event cancelled'}, {status: 200});
