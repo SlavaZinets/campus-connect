@@ -8,8 +8,6 @@ export async function GET(req, { params }) {
         const session = await getSession(req);
         if (!session) return NextResponse.json({ error: 'Unauthorised' }, { status: 401 });
 
-        // JOIN events + categories + users so the booking detail page receives
-        // everything it needs in one round-trip.
         const sql = `
             SELECT
                 bookings.id           AS booking_id,
@@ -64,29 +62,16 @@ export async function PATCH(req, { params }) {
 
         if (rows.length === 0) return NextResponse.json({ error: 'No bookings found' }, { status: 404 });
         
-        const currentBooking = rows[0]; 
-        const oldStatus = currentBooking.status; 
-        const eventId = currentBooking.event_id; 
+        const currentBooking = rows[0];
 
-        
-        if (currentBooking.user_id !== session.id) {
+        if (session.role !== 'admin' && currentBooking.user_id !== session.id) {
             return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
         }
 
-        
         await pool.query(
             'UPDATE bookings SET status = ? WHERE id = ?',
             [newStatus, id]
         );
-
-       
-        if (oldStatus !== 'cancelled' && newStatus === 'cancelled') {
-            await pool.query('UPDATE events SET booked = booked - 1 WHERE id = ?', [eventId]);
-        }
-    
-        else if (oldStatus === 'cancelled' && newStatus !== 'cancelled') {
-            await pool.query('UPDATE events SET booked = booked + 1 WHERE id = ?', [eventId]);
-        }
 
         return NextResponse.json({ message: 'Booking updated successfully' }, { status: 200 });
 
