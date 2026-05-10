@@ -89,10 +89,20 @@ export async function DELETE(req, { params }) {
             return NextResponse.json({ error: 'Cannot delete your own account' }, { status: 400 });
         }
 
-        const [deleted] = await pool.query(
-            'DELETE FROM users WHERE id = ?',
+        // Remove child rows in FK-safe order before deleting the user.
+        // 1. Sessions belonging to this user.
+        await pool.query('DELETE FROM sessions WHERE user_id = ?', [id]);
+        // 2. Bookings made by this user (as attendee).
+        await pool.query('DELETE FROM bookings WHERE user_id = ?', [id]);
+        // 3. Bookings on events this user organised (so events can be deleted next).
+        await pool.query(
+            'DELETE FROM bookings WHERE event_id IN (SELECT id FROM events WHERE organiser_id = ?)',
             [id]
         );
+        // 4. Events created by this user.
+        await pool.query('DELETE FROM events WHERE organiser_id = ?', [id]);
+        // 5. Finally the user row itself.
+        await pool.query('DELETE FROM users WHERE id = ?', [id]);
 
         return NextResponse.json({message: 'Account deleted successfully'}, {status: 200});
     } catch (error) {
