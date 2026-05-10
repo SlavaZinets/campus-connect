@@ -1,16 +1,63 @@
 'use client';
 
+import { useState } from 'react';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import Modal from '@/components/ui/Modal';
 import { formatDay, formatLongDate, formatTimeRange } from '@/utils/helpers';
 import styles from './index.module.css';
 
 export default function BookingModal({ event, open, onClose }) {
-  const { title, photo, start_at, end_at } = event;
+  const router = useRouter();
+  const { id, title, photo, start_at, end_at } = event;
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState(null);
 
-  function handlePurchase() {
-    // TODO: POST /api/bookings { event_id: event.id }
-    onClose();
+  async function handlePurchase() {
+    setSubmitting(true);
+    setError(null);
+
+    try {
+      const res = await fetch('/api/bookings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ event_id: id }),
+      });
+
+      if (res.status === 401) {
+        setError('You need to log in to book a ticket.');
+        setSubmitting(false);
+        return;
+      }
+      if (res.status === 403) {
+        setError('Only attendees can book events.');
+        setSubmitting(false);
+        return;
+      }
+      if (res.status === 409) {
+        const body = await res.json().catch(() => ({}));
+        setError(body.error || 'This event is unavailable.');
+        setSubmitting(false);
+        return;
+      }
+      if (res.status === 404) {
+        setError('Event not found.');
+        setSubmitting(false);
+        return;
+      }
+      if (!res.ok) {
+        throw new Error(`POST /api/bookings failed: ${res.status}`);
+      }
+
+      // Refresh server components so capacity bar reflects the new count, then close.
+      onClose();
+      router.push('/attendee/profile/bookings');
+      router.refresh();
+    } catch (err) {
+      console.error(err);
+      setError('Something went wrong. Please try again.');
+      setSubmitting(false);
+    }
   }
 
   return (
@@ -38,8 +85,15 @@ export default function BookingModal({ event, open, onClose }) {
           </div>
         </section>
 
-        <button type="button" onClick={handlePurchase} className={styles.purchaseBtn}>
-          Purchase a ticket
+        {error && <p className={styles.error} role="alert">{error}</p>}
+
+        <button
+          type="button"
+          onClick={handlePurchase}
+          disabled={submitting}
+          className={styles.purchaseBtn}
+        >
+          {submitting ? 'Booking…' : 'Purchase a ticket'}
         </button>
       </div>
     </Modal>

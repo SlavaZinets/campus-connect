@@ -83,6 +83,17 @@
   color: var(--coral);
 }
 
+.error {
+  font-size: var(--fs-body-s);
+  font-weight: var(--fw-medium);
+  color: var(--rust);
+  background-color: rgba(184, 86, 56, 0.08);
+  border: 1px solid var(--rust);
+  border-radius: 8px;
+  padding: 10px 14px;
+  margin: 0;
+}
+
 /* purchase button */
 .purchaseBtn {
   padding: 14px 24px;
@@ -97,8 +108,14 @@
   transition: background-color 150ms ease-out;
 }
 
-.purchaseBtn:hover {
+.purchaseBtn:hover:not(:disabled) {
   background-color: var(--coral-deep);
+}
+
+.purchaseBtn:disabled {
+  background-color: var(--border);
+  color: var(--warm-gray);
+  cursor: not-allowed;
 }
 
 .purchaseBtn:focus-visible {
