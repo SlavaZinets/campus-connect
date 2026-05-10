@@ -1,12 +1,36 @@
+import pool from '@/lib/db';
+
 import Link from 'next/link';
 import OwnerEventCard from '@/components/events/OwnerEventCard';
 import EmptyState from '@/components/profile/EmptyState';
 import { getEventsByIds, MOCK_OWN_EVENT_IDS } from '@/lib/mock/events';
 import styles from './page.module.css';
+import { getSession } from '@/lib/session';
 
-export default function OrganiserEventsPage() {
-  // TODO: GET /api/events/mine — events created by the caller
-  const ownEvents = getEventsByIds(MOCK_OWN_EVENT_IDS);
+export default async function OrganiserEventsPage() {
+  
+  const session = await getSession();
+
+  
+  if (!session || session.role !== 'organiser') {
+    return (
+      <main className="container">
+        <p>You must be logged in as an organiser to view this page.</p>
+      </main>
+    );
+  }
+
+  
+  const [ownEvents] = await pool.query(
+    `SELECT 
+        events.*, 
+        categories.name AS category 
+     FROM events 
+     LEFT JOIN categories ON events.category_id = categories.id
+     WHERE organiser_id = ? 
+     ORDER BY created_at DESC`,
+    [session.id]
+  );
 
   return (
     <main className={styles.main}>

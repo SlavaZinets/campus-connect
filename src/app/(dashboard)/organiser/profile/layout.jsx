@@ -18,7 +18,7 @@ export default async function OrganiserProfileLayout({ children }) {
         <div className={styles.divider} />
 
         <div className={styles.layout}>
-          <ProfileSidebar user={user} />
+          <ProfileSidebar user={user} initialAvatar={user.avatar_img} />
           <div className={styles.content}>{children}</div>
         </div>
 

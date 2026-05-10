@@ -35,8 +35,26 @@ export default function BookingModal({ event, open, onClose }) {
         return;
       }
       if (res.status === 409) {
-        const body = await res.json().catch(() => ({}));
-        setError(body.error || 'This event is unavailable.');
+        const conflictData = await res.json().catch(() => ({}));
+
+        
+        if (conflictData.status === 'cancelled' && conflictData.bookingId) {
+          const patchRes = await fetch(`/api/bookings/${conflictData.bookingId}`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ status: 'confirmed' }), 
+          });
+
+          if (patchRes.ok) {
+            onClose();
+            router.push('/attendee/profile/bookings');
+            router.refresh();
+            return;
+          }
+        }
+
+        
+        setError(conflictData.error || 'You have already booked this event.');
         setSubmitting(false);
         return;
       }

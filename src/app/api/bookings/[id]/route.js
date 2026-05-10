@@ -32,6 +32,8 @@ export async function GET(req, { params }) {
         `;
         const [rows] = await pool.query(sql, [id]);
 
+        
+
         if (rows.length === 0) return NextResponse.json({ error: 'Booking not found' }, { status: 404 });
         if (session.role !== 'admin' && rows[0].user_id !== session.id) {
             return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
@@ -51,7 +53,7 @@ export async function PATCH(req, { params }) {
         if (!session) return NextResponse.json({ error: 'Unauthorised' }, { status: 401 });
 
         const body = await req.json();
-        const { status: newStatus } = body; 
+        const { status: newStatus } = body;
 
         if (!newStatus) {
             return NextResponse.json({ error: 'Status is required' }, { status: 400 });
@@ -63,27 +65,27 @@ export async function PATCH(req, { params }) {
         );
 
         if (rows.length === 0) return NextResponse.json({ error: 'No bookings found' }, { status: 404 });
-        
-        const currentBooking = rows[0]; 
-        const oldStatus = currentBooking.status; 
-        const eventId = currentBooking.event_id; 
 
-        
+        const currentBooking = rows[0];
+        const oldStatus = currentBooking.status;
+        const eventId = currentBooking.event_id;
+
+
         if (currentBooking.user_id !== session.id) {
             return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
         }
 
-        
+
         await pool.query(
             'UPDATE bookings SET status = ? WHERE id = ?',
             [newStatus, id]
         );
 
-       
+
         if (oldStatus !== 'cancelled' && newStatus === 'cancelled') {
             await pool.query('UPDATE events SET booked = booked - 1 WHERE id = ?', [eventId]);
         }
-    
+
         else if (oldStatus === 'cancelled' && newStatus !== 'cancelled') {
             await pool.query('UPDATE events SET booked = booked + 1 WHERE id = ?', [eventId]);
         }
@@ -91,7 +93,7 @@ export async function PATCH(req, { params }) {
         return NextResponse.json({ message: 'Booking updated successfully' }, { status: 200 });
 
     } catch (error) {
-        
+
         console.error('PATCH /api/bookings error:', error);
         return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
     }
