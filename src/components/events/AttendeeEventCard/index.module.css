@@ -48,6 +48,31 @@
   border-radius: 8px;
   padding: 2px 10px;
 }
+.statusBadge {
+  width: fit-content; 
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 14px;
+  border-radius: 99px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Status variants */
+.status_cancelled {
+  background-color: var(--rust);
+  color: var(--white);
+  border: 1px solid var(--coral-deep);
+}
+
+.status_confirmed {
+  background-color: var(--sage);
+  color: var(--white);
+  border: 1px solid var(--ink);
+}
 
 /* photo */
 .photoWrap {

@@ -1,5 +1,5 @@
 import { cookies } from 'next/headers';
-import EventCard from '@/components/events/EventCard';
+import AttendeeEventCard from '@/components/events/AttendeeEventCard';
 import EmptyState from '@/components/profile/EmptyState';
 import styles from './page.module.css';
 
@@ -35,7 +35,7 @@ export default async function BookedEventsPage() {
       <h2 className={styles.title}>Booked events</h2>
       <div className={styles.grid}>
         {bookings.map(b => (
-          <EventCard
+          <AttendeeEventCard
             key={b.booking_id}
             event={b}
             linkHref={`/attendee/bookings/${b.booking_id}`}

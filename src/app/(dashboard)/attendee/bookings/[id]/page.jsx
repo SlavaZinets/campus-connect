@@ -1,8 +1,10 @@
 import { cookies } from 'next/headers';
 import { notFound } from 'next/navigation';
+
 import BookingDetail from '@/components/bookings/BookingDetail';
 
 export default async function BookingDetailPage({ params }) {
+  
   const { id } = await params;
 
   // Forward the session cookie so the API can verify ownership.
@@ -21,6 +23,8 @@ export default async function BookingDetailPage({ params }) {
 
   // The row contains booking_id + status + the joined event fields.
   const booking = await res.json();
+
+  
 
   return <BookingDetail event={booking} />;
 }

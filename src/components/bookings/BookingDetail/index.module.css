@@ -357,6 +357,20 @@
   padding: 4px 12px;
   border-radius: 999px;
 }
+/* Cancelled Ticket Badge */
+.ticketBadgeCancelled {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-body);
+  font-size: var(--fs-body-s);
+  font-weight: var(--fw-semibold);
+  padding: 4px 12px;
+  border-radius: 999px;
+  width: fit-content; /* Prevents stretching */
+  color: var(--rust); 
+  background-color: rgba(184, 86, 56, 0.15); 
+}
 
 .ticketBadge :global(.material-symbols-outlined) { font-size: 18px; }
 
