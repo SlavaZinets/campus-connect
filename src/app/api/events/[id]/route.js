@@ -42,11 +42,11 @@ export async function PUT(req, { params }) {
         const { id } = await params;
 
         const body = await req.json();
-        const { title, description, location, category_id, start_at, capacity } = body;
+        const { title, description, location, category_id, start_at, end_at, capacity } = body;
 
         const session = await getSession(req);
         if (!session) return NextResponse.json({error: 'Unauthorised'}, {status: 401});
-        if (session.role !== 'organiser') return NextResponse.json({error: 'Forbidden'}, {status: 403});
+        if (session.role !== 'organiser' && session.role !== 'admin') return NextResponse.json({error: 'Forbidden'}, {status: 403});
 
         const [existing] = await pool.query(
             'SELECT * FROM events WHERE id = ?',
@@ -54,22 +54,21 @@ export async function PUT(req, { params }) {
         );
 
         if (existing.length === 0) return NextResponse.json({ error: 'Event not found' }, { status: 404 });
-        if (existing[0].organiser_id !== session.id) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+        if (session.role === 'organiser' && existing[0].organiser_id !== session.id) {
+            return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+        }
 
-        const [updated] = await pool.query(
+        const toMysqlDt = (v) => v ? v.replace('T', ' ') : null;
+
+        await pool.query(
             'UPDATE events SET title = ?, description = ?, location = ?, category_id = ?, start_at = ?, capacity = ? WHERE id = ?',
-            [title, description, location, category_id, start_at, capacity, id]
+            [title, description, location, category_id, toMysqlDt(start_at), capacity, id]
         );
 
-        const [result] = await pool.query(
-            'SELECT * FROM events WHERE id = ?',
-            [id]
-        );
-
-        if (result.length === 0) return NextResponse.json({error: 'Event not found'}, {status: 404});
-
+        const [result] = await pool.query('SELECT * FROM events WHERE id = ?', [id]);
         return NextResponse.json(result[0], {status: 200});
     } catch (error) {
+        console.error('PUT /api/events/[id] failed:', error);
         return NextResponse.json({error: 'Internal Server Error'}, {status: 500});
     }
 }
@@ -94,10 +93,8 @@ export async function DELETE(req, { params }) {
             return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
         }
 
-        const [deleted] = await pool.query(
-            'DELETE FROM events WHERE id = ?',
-            [id]
-        );
+        await pool.query('DELETE FROM bookings WHERE event_id = ?', [id]);
+        await pool.query('DELETE FROM events WHERE id = ?', [id]);
 
         return NextResponse.json({message: 'Deleted successfully'}, {status: 200});
     } catch (error) {
