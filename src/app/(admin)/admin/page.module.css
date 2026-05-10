@@ -1,0 +1,104 @@
+.page {
+    padding-top: 32px;
+    padding-bottom: 48px;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+}
+
+.intro {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.title {
+    margin: 0;
+}
+
+.subtitle {
+    margin: 0;
+    color: var(--warm-gray);
+    font-size: var(--fs-body-l);
+    line-height: var(--lh-body-l);
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+}
+
+.cardLink {
+    display: block;
+    color: inherit;
+    text-decoration: none;
+    border-radius: 16px;
+}
+
+.cardLink:focus-visible {
+    outline: 2px solid var(--coral);
+    outline-offset: 2px;
+}
+
+.card {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 24px;
+    background-color: var(--paper);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    transition: border-color 150ms ease-out, transform 150ms ease-out;
+    height: 100%;
+}
+
+.cardLink:hover .card {
+    border-color: var(--coral);
+    transform: translateY(-2px);
+}
+
+.cardTitle {
+    margin: 0;
+    font-size: var(--fs-h2);
+    line-height: var(--lh-h2);
+}
+
+.cardDescription {
+    margin: 0;
+    color: var(--warm-gray);
+    font-size: var(--fs-body-m);
+    line-height: var(--lh-body-m);
+    flex: 1 1 auto;
+}
+
+.cardCta {
+    margin-top: 8px;
+    color: var(--coral);
+    font-weight: var(--fw-medium);
+    font-size: var(--fs-body-m);
+    transition: color 150ms ease-out;
+}
+
+.cardLink:hover .cardCta {
+    color: var(--coral-deep);
+}
+
+@media (min-width: 768px) {
+    .page {
+        padding-top: 48px;
+        gap: 40px;
+    }
+
+    .grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 20px;
+    }
+}
+
+@media (min-width: 1024px) {
+    .grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 24px;
+    }
+}
