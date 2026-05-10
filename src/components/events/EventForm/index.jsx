@@ -19,7 +19,7 @@ export default function EventForm({ mode = 'create', initialValues }) {
   const router = useRouter();
   const [form, setForm] = useState(() => ({ ...EMPTY, ...(initialValues ?? {}) }));
   
-  // --- IMAGE STATE ---
+
   const [photo, setPhoto] = useState(initialValues?.photo || null);
   
   const [submitting, setSubmitting] = useState(false);
@@ -30,7 +30,7 @@ export default function EventForm({ mode = 'create', initialValues }) {
     return (e) => setForm((prev) => ({ ...prev, [field]: e.target.value }));
   }
 
-  // --- IMAGE UPLOAD LOGIC ---
+
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -42,7 +42,7 @@ export default function EventForm({ mode = 'create', initialValues }) {
 
     const reader = new FileReader();
     reader.onloadend = () => {
-      setPhoto(reader.result); // Set the Base64 string
+      setPhoto(reader.result);
     };
     reader.readAsDataURL(file);
   };
@@ -105,7 +105,7 @@ export default function EventForm({ mode = 'create', initialValues }) {
         {mode === 'create' ? 'Create new event' : 'Edit event'}
       </h1>
 
-      {/* --- PHOTO UPLOAD SECTION --- */}
+      
       <div className={styles.field}>
         <label className={styles.label}>Event Cover Photo</label>
         <div

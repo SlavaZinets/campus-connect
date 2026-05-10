@@ -67,6 +67,7 @@ export async function PUT(req, { params }) {
 
         const [result] = await pool.query('SELECT * FROM events WHERE id = ?', [id]);
         return NextResponse.json(result[0], {status: 200});
+        
     } catch (error) {
         console.error('PUT /api/events/[id] failed:', error);
         return NextResponse.json({error: 'Internal Server Error'}, {status: 500});
@@ -76,20 +77,18 @@ export async function PUT(req, { params }) {
 export async function DELETE(req, { params }) {
     try {
         const { id } = await params;
-
         const session = await getSession(req);
+
         if (!session) return NextResponse.json({error: 'Unauthorised'}, {status: 401});
-        if (session.role !== 'organiser' && session.role !== 'admin') return NextResponse.json({error: 'Forbidden'}, {status: 403});
+        
+        
+        const [eventRows] = await pool.query('SELECT * FROM events WHERE id = ?', [id]);
+        if (eventRows.length === 0) return NextResponse.json({error: 'Event not found'}, {status: 404});
 
-        const [event] = await pool.query(
-            'SELECT * FROM events WHERE id = ?',
-            [id]
-        );
+        const event = eventRows[0];
 
-        if (event.length === 0) return NextResponse.json({error: 'Event not found'}, {status: 404});
-
-
-        if (session.role === 'organiser' && event[0].organiser_id !== session.id) {
+        
+        if (session.role === 'organiser' && event.organiser_id !== session.id) {
             return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
         }
 
@@ -98,6 +97,8 @@ export async function DELETE(req, { params }) {
 
         return NextResponse.json({message: 'Deleted successfully'}, {status: 200});
     } catch (error) {
+        
+        console.error('DELETE /api/events error:', error);
         return NextResponse.json({error: 'Internal Server Error'}, {status: 500});
     }
 }

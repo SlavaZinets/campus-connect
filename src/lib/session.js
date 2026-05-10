@@ -1,5 +1,5 @@
 import { SignJWT, jwtVerify } from 'jose';
-
+import { cookies } from 'next/headers';
 const SECRET = new TextEncoder().encode(process.env.SESSION_SECRET);
 
 /**
@@ -23,9 +23,21 @@ export async function setSession(res, user){
  * Reads and verifies the session cookie from a request
  * @param {object} req - Next.js request object
  */
-export async function getSession(req){
-    const token = req.cookies.get('session')?.value;
+export async function getSession(req) {
+    let token;
+
+    // 1. If 'req' was passed (API Route context)
+    if (req && req.cookies) {
+        token = req.cookies.get('session')?.value;
+    } 
+    // 2. If 'req' is missing (Server Component / Page context)
+    else {
+        const cookieStore = await cookies();
+        token = cookieStore.get('session')?.value;
+    }
+
     if (!token) return null;
+
     try {
         const { payload } = await jwtVerify(token, SECRET);
         return payload;

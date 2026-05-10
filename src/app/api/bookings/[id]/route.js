@@ -30,6 +30,8 @@ export async function GET(req, { params }) {
         `;
         const [rows] = await pool.query(sql, [id]);
 
+        
+
         if (rows.length === 0) return NextResponse.json({ error: 'Booking not found' }, { status: 404 });
         if (session.role !== 'admin' && rows[0].user_id !== session.id) {
             return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
@@ -49,7 +51,7 @@ export async function PATCH(req, { params }) {
         if (!session) return NextResponse.json({ error: 'Unauthorised' }, { status: 401 });
 
         const body = await req.json();
-        const { status: newStatus } = body; 
+        const { status: newStatus } = body;
 
         if (!newStatus) {
             return NextResponse.json({ error: 'Status is required' }, { status: 400 });
@@ -76,7 +78,7 @@ export async function PATCH(req, { params }) {
         return NextResponse.json({ message: 'Booking updated successfully' }, { status: 200 });
 
     } catch (error) {
-        
+
         console.error('PATCH /api/bookings error:', error);
         return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
     }
