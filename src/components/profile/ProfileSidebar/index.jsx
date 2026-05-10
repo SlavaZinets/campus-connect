@@ -4,6 +4,7 @@ import styles from './index.module.css';
 
 export default function ProfileSidebar({ user, initialAvatar }) {
   const fullName = `${user.firstName} ${user.lastName}`;
+  
 
   return (
     <aside className={styles.sidebar}>

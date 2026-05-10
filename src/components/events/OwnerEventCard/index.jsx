@@ -18,11 +18,19 @@ export default function OwnerEventCard({ event }) {
   return (
     <article className={styles.card}>
       <Link href={manageHref} className={styles.photoLink} aria-label={title}>
-        <div className={styles.photoWrap}>
-          {photo
-            ? <Image src={photo} alt="" fill sizes="(max-width: 768px) 100vw, 400px" className={styles.photo} />
-            : <div className={styles.photoPlaceholder} />
-          }
+       <div className={styles.photoWrap}>
+          {photo ? (
+            
+            <img 
+              src={photo} 
+              alt="" 
+              className={styles.photo} 
+            />
+          ) : (
+            <div className={styles.photoPlaceholder}>
+               <span className="material-symbols-outlined">image</span>
+            </div>
+          )}
         </div>
       </Link>
 

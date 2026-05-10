@@ -6,15 +6,63 @@ import EventOwnerActions from '@/components/events/EventOwnerActions';
 import BookersList from '@/components/events/BookersList';
 import { formatDay, formatLongDate, formatTimeRange } from '@/utils/helpers';
 import styles from './page.module.css';
+import { getSession } from '@/lib/session';
+import pool from '@/lib/db';
+
 
 export default async function ManageEventPage({ params }) {
   const { id } = await params;
+  const session = await getSession();
 
-  // TODO: GET /api/events/[id] and verify session.userId === event.organiser_id
-  const event = getEventById(id);
+  
+  if (!session) redirect('/login');
+
+  
+  const eventSql = `
+    SELECT
+      events.*,
+      categories.name AS category,
+      users.name      AS organiser
+    FROM events
+    JOIN categories  ON events.category_id  = categories.id
+    JOIN users       ON events.organiser_id = users.id
+    WHERE events.id = ?
+  `;
+  const [eventResult] = await pool.query(eventSql, [id]);
+  const event = eventResult[0];
+
   if (!event) notFound();
 
-  const bookings = getBookersByEventId(id);
+  
+  if (session.role !== 'admin' && event.organiser_id !== session.id) {
+    redirect('/organiser/events');
+  }
+
+  
+  const bookingsSql = `
+    SELECT 
+      bookings.id,
+      bookings.status,
+      bookings.booked_at,
+      users.name,
+      users.email,
+      users.avatar_img
+    FROM bookings
+    JOIN users ON bookings.user_id = users.id
+    WHERE bookings.event_id = ?
+    ORDER BY bookings.booked_at DESC
+  `;
+  const [rawBookings] = await pool.query(bookingsSql, [id]);
+
+  
+  const bookings = rawBookings.map((b) => ({
+    ...b,
+    user: {
+      name: b.name,
+      email: b.email,
+      avatar_img: b.avatar_img,
+    },
+  }));
   const confirmedCount = bookings.filter((b) => b.status === 'confirmed').length;
   const cancelledCount = bookings.filter((b) => b.status === 'cancelled').length;
 
