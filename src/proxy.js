@@ -13,7 +13,7 @@ function homeFor(role) {
   return '/attendee/events';
 }
 
-export async function middleware(req) {
+export async function proxy(req) {
   const { pathname } = req.nextUrl;
   const token = req.cookies.get('session')?.value;
 
