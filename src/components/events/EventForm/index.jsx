@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { MOCK_CATEGORIES } from '@/lib/mock/events';
 import styles from './index.module.css';
@@ -15,26 +15,43 @@ const EMPTY = {
   capacity: '',
 };
 
-/**
- * Used by /organiser/events/new and /organiser/events/[id]/edit.
- * Pass `mode = "create" | "edit"` and (for edit) `initialValues` from the API.
- */
 export default function EventForm({ mode = 'create', initialValues }) {
   const router = useRouter();
   const [form, setForm] = useState(() => ({ ...EMPTY, ...(initialValues ?? {}) }));
+  
+  // --- IMAGE STATE ---
+  const [photo, setPhoto] = useState(initialValues?.photo || null);
+  
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState(null);
+  const fileInputRef = useRef(null);
 
   function update(field) {
     return (e) => setForm((prev) => ({ ...prev, [field]: e.target.value }));
   }
+
+  // --- IMAGE UPLOAD LOGIC ---
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    if (file.size > 2 * 1024 * 1024) {
+      alert("Image must be under 2MB");
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setPhoto(reader.result); // Set the Base64 string
+    };
+    reader.readAsDataURL(file);
+  };
 
   async function handleSubmit(e) {
     e.preventDefault();
     setSubmitting(true);
     setError(null);
 
-    // API expects category_id (number); the form binds category as a name.
     const categoryId = MOCK_CATEGORIES.find((c) => c.name === form.category)?.id;
     if (!categoryId) {
       setError('Please pick a valid category.');
@@ -42,78 +59,44 @@ export default function EventForm({ mode = 'create', initialValues }) {
       return;
     }
 
-    // datetime-local 'YYYY-MM-DDTHH:mm' -> MySQL 'YYYY-MM-DD HH:mm:ss'
     const toMysql = (v) => (v ? v.replace('T', ' ') + ':00' : v);
 
+    
     const payload = {
       title: form.title,
       description: form.description,
       location: form.location,
       category_id: categoryId,
       start_at: toMysql(form.start_at),
+      end_at: toMysql(form.end_at), 
       capacity: Number(form.capacity),
+      photo: photo, 
     };
 
     try {
-      if (mode === 'create') {
-        const res = await fetch('/api/events', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload),
-        });
+      const url = mode === 'create' ? '/api/events' : `/api/events/${initialValues.id}`;
+      const method = mode === 'create' ? 'POST' : 'PUT';
 
-        if (res.status === 401) {
-          setError('Your session expired. Please log in again.');
-          setSubmitting(false);
-          return;
-        }
-        if (res.status === 403) {
-          setError('You need to be logged in as an organiser to create events.');
-          setSubmitting(false);
-          return;
-        }
-        if (res.status === 400) {
-          const body = await res.json().catch(() => ({}));
-          setError(body.error || 'Please fill in all required fields.');
-          setSubmitting(false);
-          return;
-        }
-        if (!res.ok) {
-          throw new Error(`POST /api/events failed: ${res.status}`);
-        }
-      } else {
-        const res = await fetch(`/api/events/${initialValues.id}`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload),
-        });
+      const res = await fetch(url, {
+        method: method,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
 
-        if (res.status === 401) {
-          setError('Your session expired. Please log in again.');
-          setSubmitting(false);
-          return;
-        }
-        if (res.status === 403) {
-          setError('You can only edit events you organise.');
-          setSubmitting(false);
-          return;
-        }
-        if (!res.ok) {
-          throw new Error(`PUT /api/events/${initialValues.id} failed: ${res.status}`);
-        }
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}));
+        if (res.status === 401) throw new Error('Session expired');
+        if (res.status === 403) throw new Error('Permission denied');
+        throw new Error(body.error || 'Server error');
       }
 
       router.push('/organiser/events');
       router.refresh();
     } catch (err) {
       console.error(err);
-      setError('Something went wrong. Please try again.');
+      setError(err.message || 'Something went wrong. Please try again.');
       setSubmitting(false);
     }
-  }
-
-  function handleCancel() {
-    router.back();
   }
 
   return (
@@ -121,6 +104,31 @@ export default function EventForm({ mode = 'create', initialValues }) {
       <h1 className={styles.title}>
         {mode === 'create' ? 'Create new event' : 'Edit event'}
       </h1>
+
+      {/* --- PHOTO UPLOAD SECTION --- */}
+      <div className={styles.field}>
+        <label className={styles.label}>Event Cover Photo</label>
+        <div
+          className={styles.photoPreview}
+          onClick={() => fileInputRef.current.click()}
+        >
+          {photo ? (
+            <img src={photo} alt="Preview" className={styles.previewImg} />
+          ) : (
+            <div className={styles.placeholder}>
+              <span className="material-symbols-outlined">add_a_photo</span>
+              <p>Click to upload a cover image</p>
+            </div>
+          )}
+        </div>
+        <input
+          type="file"
+          ref={fileInputRef}
+          onChange={handleImageChange}
+          accept="image/*"
+          hidden
+        />
+      </div>
 
       <div className={styles.field}>
         <label htmlFor="title" className={styles.label}>Event title</label>
@@ -143,7 +151,7 @@ export default function EventForm({ mode = 'create', initialValues }) {
           onChange={update('description')}
           className={styles.textarea}
           rows={5}
-          placeholder="What's the event about? Who should come?"
+          placeholder="What's the event about?"
         />
       </div>
 
@@ -173,7 +181,6 @@ export default function EventForm({ mode = 'create', initialValues }) {
             onChange={update('location')}
             className={styles.input}
             required
-            placeholder="Block A, Lecture Hall 1"
           />
         </div>
       </div>
@@ -213,20 +220,17 @@ export default function EventForm({ mode = 'create', initialValues }) {
           onChange={update('capacity')}
           className={styles.input}
           required
-          placeholder="50"
         />
       </div>
 
       {error && <p className={styles.error} role="alert">{error}</p>}
 
       <div className={styles.actions}>
-        <button type="button" onClick={handleCancel} className={styles.cancelBtn}>
+        <button type="button" onClick={() => router.back()} className={styles.cancelBtn}>
           Cancel
         </button>
         <button type="submit" disabled={submitting} className={styles.submitBtn}>
-          {submitting
-            ? 'Saving…'
-            : mode === 'create' ? 'Create event' : 'Save changes'}
+          {submitting ? 'Saving...' : mode === 'create' ? 'Create event' : 'Save changes'}
         </button>
       </div>
     </form>
