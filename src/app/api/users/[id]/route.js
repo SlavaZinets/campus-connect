@@ -1,10 +1,11 @@
 import { NextResponse } from 'next/server';
 import pool from '@/lib/db';
 import { getSession } from '@/lib/session';
+import { validateEmail, validateRole } from '@/lib/validators';
 
 export async function GET(req, { params }) {
     try {
-        const { id } = params;
+        const { id } = await params;
         const session = await getSession(req);
         if(!session) return NextResponse.json({error: 'Unauthorised'}, {status: 401});
         if (session.role !== 'admin') return NextResponse.json({error: 'Forbidden'}, {status: 403});
@@ -24,7 +25,7 @@ export async function GET(req, { params }) {
 
 export async function PATCH(req, { params }){
     try {
-        const { id } = params;
+        const { id } = await params;
         const body = await req.json();
         const { name, email, role } = body;
         const session = await getSession(req);
@@ -38,25 +39,41 @@ export async function PATCH(req, { params }){
 
         if (user.length === 0) return NextResponse.json({error: 'User not found'}, {status: 404});
 
-        if (role) {
+        if (email !== undefined) {
+            const emailError = validateEmail(email);
+            if (emailError) return NextResponse.json({ error: emailError }, { status: 400 });
+        }
+
+        if (role !== undefined) {
             const roleError = validateRole(role);
             if (roleError) return NextResponse.json({ error: roleError }, { status: 400 });
         }
 
-        const [updated] = await pool.query(
-            'UPDATE users SET name = ?, email = ?, role = ? WHERE id = ?',
-            [name, email, role, id]
-        );
+        const fields = [];
+        const values = [];
+        if (name !== undefined)  { fields.push('name = ?');  values.push(name); }
+        if (email !== undefined) { fields.push('email = ?'); values.push(email); }
+        if (role !== undefined)  { fields.push('role = ?');  values.push(role); }
+
+        if (fields.length === 0) {
+            return NextResponse.json({ error: 'No fields to update' }, { status: 400 });
+        }
+
+        values.push(id);
+        await pool.query(`UPDATE users SET ${fields.join(', ')} WHERE id = ?`, values);
 
         return NextResponse.json({message: 'Updated successfully'}, {status: 200});
     } catch (error) {
+        if (error?.code === 'ER_DUP_ENTRY') {
+            return NextResponse.json({ error: 'Email already in use' }, { status: 409 });
+        }
         return NextResponse.json({error: 'Internal Server Error'}, {status: 500});
     }
 }
 
 export async function DELETE(req, { params }) {
     try {
-        const { id } = params;
+        const { id } = await params;
         const session = await getSession(req);
         if(!session) return NextResponse.json({error: 'Unauthorised'}, {status: 401});
         if (session.role !== 'admin') return NextResponse.json({error: 'Forbidden'}, {status: 403});
