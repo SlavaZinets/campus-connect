@@ -5,17 +5,17 @@ const ADMIN_SECTIONS = [
   {
     href: '/admin/users',
     title: 'Users',
-    description: 'Browse, edit, and remove user accounts across all roles.',
+    description: 'Browse, edit, and remove user accounts',
   },
   {
     href: '/admin/events',
     title: 'Events',
-    description: 'Oversee every event on the platform and remove ones that violate policy.',
+    description: 'Browse and remove every event on the platform',
   },
   {
     href: '/admin/bookings',
     title: 'Bookings',
-    description: 'Review attendee bookings and clear records when needed.',
+    description: 'Review and modify attendee bookings',
   },
 ];
 
@@ -23,14 +23,14 @@ export default function AdminDashboardPage() {
   return (
     <main className={`container ${styles.page}`}>
 
-      <section className={styles.grid} aria-label="Admin sections">
+      <section className={styles.grid}>
         {ADMIN_SECTIONS.map((section) => (
           <Link key={section.href} href={section.href} className={styles.cardLink}>
-            <article className={styles.card}>
+            <div className={styles.card}>
               <h2 className={styles.cardTitle}>{section.title}</h2>
               <p className={styles.cardDescription}>{section.description}</p>
-              <span className={styles.cardCta} aria-hidden="true">Open</span>
-            </article>
+              <span className={styles.cardCta}>Open</span>
+            </div>
           </Link>
         ))}
       </section>

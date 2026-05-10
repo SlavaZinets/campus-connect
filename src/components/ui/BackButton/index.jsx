@@ -9,10 +9,8 @@ export default function BackButton({ label = 'Back', className = '' }) {
 
     return (
         <button
-            type="button"
             onClick={() => router.back()}
             className={`${styles.btn} ${className}`.trim()}
-            aria-label="Go back to previous page"
         >
             <IoIosArrowBack size={28} aria-hidden="true" />
             <span>{label}</span>
