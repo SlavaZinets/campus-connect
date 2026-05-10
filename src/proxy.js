@@ -8,7 +8,7 @@ const SECRET = new TextEncoder().encode(process.env.SESSION_SECRET);
  * route that doesn't belong to their role.
  */
 function homeFor(role) {
-  if (role === 'admin')     return '/';
+  if (role === 'admin')     return '/admin';
   if (role === 'organiser') return '/organiser/events';
   return '/attendee/events';
 }

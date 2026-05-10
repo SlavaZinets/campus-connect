@@ -6,7 +6,8 @@ export default function AdminHeader() {
     <header className={styles.header}>
       <div className="container">
         <div className={styles.inner}>
-          <Logo />
+          <Logo className={styles.logo}/>
+            <h2 className={styles.text}>Admin Panel</h2>
         </div>
       </div>
     </header>

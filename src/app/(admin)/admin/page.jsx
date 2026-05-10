@@ -22,12 +22,6 @@ const ADMIN_SECTIONS = [
 export default function AdminDashboardPage() {
   return (
     <main className={`container ${styles.page}`}>
-      <header className={styles.intro}>
-        <h1 className={styles.title}>Admin dashboard</h1>
-        <p className={styles.subtitle}>
-          Manage users, events, and bookings across CampusConnect.
-        </p>
-      </header>
 
       <section className={styles.grid} aria-label="Admin sections">
         {ADMIN_SECTIONS.map((section) => (
@@ -35,7 +29,7 @@ export default function AdminDashboardPage() {
             <article className={styles.card}>
               <h2 className={styles.cardTitle}>{section.title}</h2>
               <p className={styles.cardDescription}>{section.description}</p>
-              <span className={styles.cardCta} aria-hidden="true">Open →</span>
+              <span className={styles.cardCta} aria-hidden="true">Open</span>
             </article>
           </Link>
         ))}

@@ -40,7 +40,7 @@ export default function LoginForm() {
 
             const dest =
                 me?.role === 'organiser' ? '/organiser/events' :
-                me?.role === 'admin'     ? '/' :
+                me?.role === 'admin'     ? '/admin' :
                                            '/attendee/events';
 
             router.push(dest);
