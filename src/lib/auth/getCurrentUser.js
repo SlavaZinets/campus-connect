@@ -22,12 +22,12 @@ export async function getCurrentUser() {
   try {
     const { payload } = await jwtVerify(token, SECRET);
     const [rows] = await pool.query(
-      'SELECT id, name, email, role FROM users WHERE id = ?',
+      'SELECT id, name, email, avatar_img,  role FROM users WHERE id = ?',
       [payload.id]
     );
     if (rows.length === 0) return null;
 
-    const { id, name, email, role } = rows[0];
+    const { id, name, email, avatar_img, role } = rows[0];
     const [firstName = '', ...rest] = (name || '').split(' ');
     return {
       id,
@@ -36,6 +36,7 @@ export async function getCurrentUser() {
       email,
       phone: undefined,
       dateOfBirth: undefined,
+      avatar_img,
       role,
     };
   } catch {

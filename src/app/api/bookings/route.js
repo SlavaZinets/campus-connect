@@ -18,6 +18,8 @@ export async function GET(req) {
                 events.title,
                 events.description,
                 events.location,
+                events.booked,
+                events.photo,
                 events.start_at,
                 events.capacity,
                 categories.name       AS category,

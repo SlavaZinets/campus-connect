@@ -7,6 +7,7 @@ import styles from './layout.module.css';
 export default async function ProfileLayout({ children }) {
   const user = await getCurrentUser();
   if (!user) redirect('/login');
+  
 
   return (
     <main className={styles.main}>
@@ -19,7 +20,7 @@ export default async function ProfileLayout({ children }) {
         <div className={styles.divider} />
 
         <div className={styles.layout}>
-          <ProfileSidebar user={user} />
+          <ProfileSidebar user={user} initialAvatar={user.avatar_img} />
           <div className={styles.content}>{children}</div>
         </div>
       </div>
