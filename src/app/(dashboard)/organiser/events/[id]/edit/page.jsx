@@ -1,26 +1,53 @@
 import Link from 'next/link';
-import { notFound } from 'next/navigation';
-import { getEventById } from '@/lib/mock/events';
+import { notFound, redirect } from 'next/navigation';
+import pool from '@/lib/db';
+import { getSession } from '@/lib/session';
 import EventForm from '@/components/events/EventForm';
 import styles from './page.module.css';
 
+
 export default async function EditEventPage({ params }) {
   const { id } = await params;
+  const session = await getSession();
 
-  // TODO: GET /api/events/[id] and verify session.userId === event.organiser_id
-  const event = getEventById(id);
+
+  if (!session) redirect('/login');
+
+  const [rows] = await pool.query(
+    `SELECT events.*, categories.name AS category_name 
+     FROM events 
+     LEFT JOIN categories ON events.category_id = categories.id 
+     WHERE events.id = ?`,
+    [id]
+  );
+
+  const event = rows[0];
+
+
   if (!event) notFound();
 
-  // The form's datetime-local inputs need YYYY-MM-DDTHH:mm (no seconds)
+
+  if (session.role !== 'admin' && event.organiser_id !== session.id) {
+    redirect('/organiser/events');
+  }
+
+  const formatDateForInput = (date) => {
+    if (!date) return '';
+    const d = new Date(date);
+    const pad = (n) => n.toString().padStart(2, '0');
+    return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  };
+
   const initialValues = {
     id: event.id,
     title: event.title ?? '',
     description: event.description ?? '',
-    category: event.category ?? '',
+    category: event.category_name ?? '', 
     location: event.location ?? '',
-    start_at: event.start_at ? event.start_at.slice(0, 16) : '',
-    end_at: event.end_at ? event.end_at.slice(0, 16) : '',
+    start_at: formatDateForInput(event.start_at),
+    end_at: formatDateForInput(event.end_at),
     capacity: event.capacity ?? '',
+    photo: event.photo ?? null, 
   };
 
   return (

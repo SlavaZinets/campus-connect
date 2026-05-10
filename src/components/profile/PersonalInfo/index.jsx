@@ -1,39 +1,48 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
+import { useRouter } from 'next/navigation'; // Added for refreshing data
 import EditButton from './EditButton';
 import EditProfileModal from './EditProfileModal';
 import styles from './index.module.css';
 
-const STORAGE_KEY = 'campusconnect:profile';
-
 export default function PersonalInfo({ user: initialUser }) {
-  // Server-rendered defaults from CURRENT_USER, optionally overridden by edits
-  // saved to localStorage. TODO: replace with PATCH /api/users/me round-trip.
   const [user, setUser] = useState(initialUser);
   const [isEditOpen, setEditOpen] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const router = useRouter();
 
-  useEffect(() => {
-    try {
-      const saved = localStorage.getItem(STORAGE_KEY);
-      if (saved) setUser({ ...initialUser, ...JSON.parse(saved) });
-    } catch {
-      // localStorage unavailable — silently fall back to the server-side user
-    }
-  }, [initialUser]);
+  
 
-  function handleSave(updated) {
+  async function handleSave(updatedData) {
+    setIsSaving(true);
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
-    } catch {
-      // quota exceeded or storage disabled — ignore
+      const res = await fetch('/api/users/me', {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updatedData),
+      });
+
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.error || 'Failed to update profile');
+      }
+
+  
+      setUser(updatedData);
+      setEditOpen(false);
+      router.refresh(); 
+      
+    } catch (err) {
+      console.error(err);
+      alert(err.message);
+    } finally {
+      setIsSaving(false);
     }
-    setUser(updated);
-    setEditOpen(false);
   }
 
   const fields = [
-    { label: 'Name',          value: user.firstName },
+    { label: 'First Name',    value: user.firstName },
     { label: 'Last Name',     value: user.lastName },
     { label: 'Email address', value: user.email },
     { label: 'Phone number',  value: user.phone },
@@ -44,7 +53,7 @@ export default function PersonalInfo({ user: initialUser }) {
     <section className={styles.section}>
       <header className={styles.header}>
         <h2 className={styles.title}>Personal information</h2>
-        <EditButton onClick={() => setEditOpen(true)} />
+        <EditButton onClick={() => setEditOpen(true)} disabled={isSaving} />
       </header>
 
       <div className={styles.grid}>
@@ -61,6 +70,7 @@ export default function PersonalInfo({ user: initialUser }) {
         open={isEditOpen}
         onClose={() => setEditOpen(false)}
         onSave={handleSave}
+        isSaving={isSaving}
       />
     </section>
   );
