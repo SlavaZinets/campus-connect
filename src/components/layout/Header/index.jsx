@@ -28,7 +28,7 @@ export default function Header() {
         await fetch('/api/auth/logout', { method: 'POST' });
         setUser(null);
         handleClose();
-        router.push('/login');
+        router.push('/');
         router.refresh();
     }
 

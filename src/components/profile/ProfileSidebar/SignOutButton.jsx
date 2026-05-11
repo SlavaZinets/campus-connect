@@ -8,7 +8,7 @@ export default function SignOutButton() {
 
   async function handleSignOut() {
     await fetch('/api/auth/logout', { method: 'POST' });
-    router.push('/login');
+    router.push('/');
     router.refresh();
   }
 
