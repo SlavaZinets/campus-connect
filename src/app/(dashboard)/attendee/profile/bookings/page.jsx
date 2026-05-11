@@ -4,8 +4,11 @@ import EmptyState from '@/components/profile/EmptyState';
 import styles from './page.module.css';
 
 export default async function BookedEventsPage() {
+  const cookieHeader = (await cookies()).toString();
 
-  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/bookings`);
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/bookings`, {
+    headers: { Cookie: cookieHeader },
+  });
 
   if (!res.ok) {
     throw new Error(`GET /api/bookings failed: ${res.status}`);

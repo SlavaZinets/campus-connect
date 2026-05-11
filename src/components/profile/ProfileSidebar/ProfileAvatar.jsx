@@ -74,7 +74,7 @@ export default function ProfileAvatar({ userId, initialAvatar }) {
         aria-label="Change profile picture"
       >
         {src ? (
-          <Image src={src} alt="Profile picture" className={styles.avatarImg} />
+          <Image src={src} alt="Profile picture" fill sizes="160px" unoptimized className={styles.avatarImg} />
         ) : (
           <span className="material-symbols-outlined" aria-hidden="true">
             account_circle

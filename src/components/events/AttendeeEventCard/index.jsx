@@ -14,7 +14,7 @@ export default function AttendeeEventCard({ event, linkHref }) {
             <article className={styles.card}>
                 {photo && (
                     <div className={styles.photoWrap}>
-                        <Image src={photo} alt={title} fill sizes="100vw" className={styles.photo} />
+                        <Image src={photo} alt={title} fill sizes="100vw" unoptimized className={styles.photo} />
                     </div>
                 )}
 

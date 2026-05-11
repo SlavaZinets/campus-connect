@@ -7,8 +7,11 @@ import styles from './page.module.css';
 
 export default async function OrganiserEventsPage() {
   const base = process.env.NEXT_PUBLIC_BASE_URL;
+  const cookieHeader = (await cookies()).toString();
 
-  const eventsRes = await fetch(`${base}/api/events/mine`);
+  const eventsRes = await fetch(`${base}/api/events/mine`, {
+    headers: { Cookie: cookieHeader },
+  });
   if (!eventsRes.ok) throw new Error(`Failed to fetch events: ${eventsRes.status}`);
   const ownEvents = await eventsRes.json();
 

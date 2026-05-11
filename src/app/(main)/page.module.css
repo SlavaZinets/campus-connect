@@ -113,7 +113,7 @@
     background-color: var(--coral);
     color: var(--white);
     font-size: 22px;
-    margin-bottom: 16px;
+    margin:0 auto 16px;
 }
 
 .stepTitle {

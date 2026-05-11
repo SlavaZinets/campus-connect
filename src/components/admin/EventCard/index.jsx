@@ -10,7 +10,7 @@ export default function EventCard({ event, onClick }) {
         <button className={styles.card} onClick={onClick}>
             <span className={styles.avatar}>
                 {photo ? (
-                    <Image src={photo} alt="" className={styles.avatarImg} />
+                    <Image src={photo} alt="" fill sizes="48px" unoptimized className={styles.avatarImg} />
                 ) : (
                     <FiImage aria-hidden="true" />
                 )}

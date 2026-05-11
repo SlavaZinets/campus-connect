@@ -83,7 +83,7 @@ export default function BookingModal({ event, open, onClose }) {
       <div className={styles.column}>
         {photo && (
           <div className={styles.photoWrap}>
-            <Image src={photo} alt={title} fill className={styles.photo} sizes="480px" />
+            <Image src={photo} alt={title} fill unoptimized className={styles.photo} sizes="480px" />
           </div>
         )}
 

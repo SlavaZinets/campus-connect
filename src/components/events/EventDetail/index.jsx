@@ -36,7 +36,7 @@ export default function EventDetail({ event, similarEvents = [] }) {
     <article className={styles.page}>
       {photo && (
         <div className={styles.hero}>
-          <Image src={photo} alt={title} fill priority className={styles.heroImg} />
+          <Image src={photo} alt={title} fill priority unoptimized className={styles.heroImg} />
         </div>
       )}
 

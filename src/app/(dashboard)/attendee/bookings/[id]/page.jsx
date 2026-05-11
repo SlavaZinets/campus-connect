@@ -6,8 +6,11 @@ import BookingDetail from '@/components/bookings/BookingDetail';
 export default async function BookingDetailPage({params}) {
 
     const {id} = await params;
+    const cookieHeader = (await cookies()).toString();
 
-    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/bookings/${id}`);
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/bookings/${id}`, {
+        headers: { Cookie: cookieHeader },
+    });
 
     if (res.status === 404) notFound();
     if (!res.ok) {

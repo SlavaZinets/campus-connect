@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { FiImage } from 'react-icons/fi';
 import styles from './index.module.css';
 import Image from "next/image";
 
@@ -69,16 +70,17 @@ export default function EventForm({ mode = 'create', initialValues }) {
 
     const toMysql = (v) => (v ? v.replace('T', ' ') + ':00' : v);
 
-    
+    const startAt = form.start_at || initialValues?.start_at || '';
+
     const payload = {
       title: form.title,
       description: form.description,
       location: form.location,
       category_id: categoryId,
-      start_at: toMysql(form.start_at),
-      end_at: toMysql(form.end_at), 
+      start_at: toMysql(startAt),
+      end_at: toMysql(form.end_at),
       capacity: Number(form.capacity),
-      photo: photo, 
+      photo: photo,
     };
 
     try {
@@ -121,11 +123,10 @@ export default function EventForm({ mode = 'create', initialValues }) {
           onClick={() => fileInputRef.current.click()}
         >
           {photo ? (
-            <Image src={photo} alt="Preview" className={styles.previewImg} />
+            <Image src={photo} alt="Preview" fill sizes="720px" unoptimized className={styles.previewImg} />
           ) : (
-            <div className={styles.placeholder}>
-              <span className="material-symbols-outlined">add_a_photo</span>
-              <p>Click to upload a cover image</p>
+            <div className={styles.placeholder} aria-label="Click to upload a cover image">
+              <FiImage aria-hidden="true" />
             </div>
           )}
         </div>
@@ -205,7 +206,7 @@ export default function EventForm({ mode = 'create', initialValues }) {
             value={form.start_at}
             onChange={update('start_at')}
             className={styles.input}
-            required
+            required={mode === 'create'}
           />
         </div>
 

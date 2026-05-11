@@ -15,7 +15,7 @@ export default function EventCard({ event, linkHref }) {
       <article className={styles.card}>
         <div className={styles.photoWrap}>
           {photo ? (
-            <Image src={photo} alt={title} fill sizes="100vw" className={styles.photo} />
+            <Image src={photo} alt={title} fill sizes="100vw" unoptimized className={styles.photo} />
           ) : (
             <div className={styles.photoPlaceholder} aria-hidden="true">
               <FiImage />

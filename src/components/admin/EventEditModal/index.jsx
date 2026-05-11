@@ -3,14 +3,14 @@
 import { useState } from 'react';
 import Modal from '@/components/ui/Modal';
 import styles from './index.module.css';
-import {formatDate} from "@/utils/helpers";
+import { formatForInput } from "@/utils/helpers";
 
 export default function EventEditModal({ event, categories, open, onClose, onSaved, onDeleted }) {
     const [title, setTitle] = useState(event.title ?? '');
     const [description, setDescription] = useState(event.description ?? '');
     const [location, setLocation] = useState(event.location ?? '');
     const [categoryId, setCategoryId] = useState(String(event.category_id ?? ''));
-    const [startAt, setStartAt] = useState(formatDate(event.start_at));
+    const [startAt, setStartAt] = useState(formatForInput(event.start_at));
     const [capacity, setCapacity] = useState(event.capacity ?? '');
     const [confirmingDelete, setConfirmingDelete] = useState(false);
     const [submitting, setSubmitting] = useState(false);

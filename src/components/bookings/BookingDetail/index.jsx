@@ -155,6 +155,7 @@ export default function BookingDetail({ event }) {
                   alt={title}
                   fill
                   priority
+                  unoptimized
                   className={styles.heroImg}
                 />
               </div>

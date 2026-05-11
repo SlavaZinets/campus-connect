@@ -15,6 +15,7 @@ export default async function ManageEventPage({ params }) {
   if (!session) redirect('/login');
 
   const base = process.env.NEXT_PUBLIC_BASE_URL;
+  const cookieHeader = (await cookies()).toString();
 
   const eventRes = await fetch(`${base}/api/events/${id}`);
   if (eventRes.status === 404) notFound();
@@ -25,7 +26,9 @@ export default async function ManageEventPage({ params }) {
     redirect('/organiser/events');
   }
 
-  const bookingsRes = await fetch(`${base}/api/events/${id}/bookings`);
+  const bookingsRes = await fetch(`${base}/api/events/${id}/bookings`, {
+    headers: { Cookie: cookieHeader },
+  });
   if (!bookingsRes.ok) throw new Error(`Failed to fetch bookings: ${bookingsRes.status}`);
   const rawBookings = await bookingsRes.json();
 
@@ -43,23 +46,23 @@ export default async function ManageEventPage({ params }) {
   return (
     <main className={styles.main}>
       <div className="container">
-        <BackButton label="Back to my events" />
+        <BackButton label="Back to my events" className={styles.back} />
 
-        <article className={styles.page}>
+        <div className={styles.page}>
           {event.photo && (
             <div className={styles.hero}>
-              <Image src={event.photo} alt={event.title} fill priority className={styles.heroImg} />
+              <Image src={event.photo} alt={event.title} fill priority unoptimized className={styles.heroImg} />
             </div>
           )}
 
-          <header className={styles.header}>
+          <div className={styles.header}>
             <div className={styles.headerText}>
               {event.category && <span className={styles.chip}>{event.category}</span>}
               <h1 className={styles.title}>{event.title}</h1>
               <p className={styles.byline}>You are the organiser of this event.</p>
             </div>
             <EventOwnerActions eventId={event.id} />
-          </header>
+          </div>
 
           <div className={styles.statsRow}>
             <div className={styles.stat}>
@@ -114,7 +117,7 @@ export default async function ManageEventPage({ params }) {
             </header>
             <BookersList bookings={bookings} limit={5} />
           </section>
-        </article>
+        </div>
       </div>
     </main>
   );

@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
+import { FiImage } from 'react-icons/fi';
 import OwnerCardActions from './OwnerCardActions';
 import { formatDate } from '@/utils/helpers';
 import styles from './index.module.css';
@@ -20,11 +21,14 @@ export default function OwnerEventCard({ event }) {
             <Image
               src={photo}
               alt=""
+              fill
+              sizes="100vw"
+              unoptimized
               className={styles.photo}
             />
           ) : (
             <div className={styles.photoPlaceholder}>
-               <span className="material-symbols-outlined">image</span>
+              <FiImage aria-hidden="true" />
             </div>
           )}
           {category && <span className={styles.categoryBadge}>{category}</span>}

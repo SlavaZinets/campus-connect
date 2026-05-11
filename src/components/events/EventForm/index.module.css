@@ -140,6 +140,7 @@
 }
 
 .photoPreview {
+  position: relative;
   width: 100%;
   height: 200px;
   background: #f9f7f2; /* Match your form bg */
@@ -164,13 +165,15 @@
 }
 
 .placeholder {
-  text-align: center;
-  color: #71717a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--warm-gray);
 }
 
-.placeholder span {
-  font-size: 40px;
-  margin-bottom: 8px;
+.placeholder svg {
+  width: 48px;
+  height: 48px;
 }
 
 @media (max-width: 640px) {

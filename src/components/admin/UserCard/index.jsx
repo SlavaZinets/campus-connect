@@ -15,7 +15,7 @@ export default function UserCard({ user, onClick }) {
         <button className={styles.card} onClick={onClick}>
             <span className={styles.avatar}>
                 {avatar_img ? (
-                    <Image src={avatar_img} alt="" className={styles.avatarImg} />
+                    <Image src={avatar_img} alt="" fill sizes="48px" unoptimized className={styles.avatarImg} />
                 ) : (
                     <FiUser aria-hidden="true" />
                 )}
