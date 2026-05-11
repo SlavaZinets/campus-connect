@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation'; // Added for refreshing data
+import { useRouter } from 'next/navigation';
 import EditButton from './EditButton';
 import EditProfileModal from './EditProfileModal';
 import styles from './index.module.css';

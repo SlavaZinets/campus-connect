@@ -5,8 +5,7 @@ export default async function EventDetailPage({ params }) {
   const { id } = await params;
 
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_URL}/api/events/${id}`,
-    { cache: 'no-store' }
+    `${process.env.NEXT_PUBLIC_BASE_URL}/api/events/${id}`
   );
 
   if (res.status === 404) notFound();
@@ -17,11 +16,5 @@ export default async function EventDetailPage({ params }) {
   const event = await res.json();
 
   // similarEvents — deferred until /api/events/[id]/similar exists.
-  return (
-    <main>
-      <div className="container">
-        <EventDetail event={event} similarEvents={[]} />
-      </div>
-    </main>
-  );
+  return <EventDetail event={event} similarEvents={[]} />;
 }

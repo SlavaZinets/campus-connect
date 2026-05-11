@@ -4,13 +4,8 @@ import UsersList from '@/components/admin/UsersList';
 import styles from './page.module.css';
 
 export default async function AdminUsersPage() {
-  const cookieStore = await cookies();
-  const cookieHeader = cookieStore.toString();
 
-  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/users`, {
-    headers: { Cookie: cookieHeader },
-    cache: 'no-store',
-  });
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/users`);
 
   if (!res.ok) {
     throw new Error(`GET /api/users failed: ${res.status}`);

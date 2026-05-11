@@ -33,12 +33,18 @@ export default function Header() {
     }
 
     // Role-aware destinations. Defaults to /attendee/* when logged out.
-    const eventsHref  = user?.role === 'organiser' ? '/organiser/events'  : '/attendee/events';
-    const profileHref = user?.role === 'organiser' ? '/organiser/profile' : '/attendee/profile';
+    const profileHref   = user?.role === 'organiser' ? '/organiser/profile' : '/attendee/profile';
+    const dashboardHref =
+        user?.role === 'admin'     ? '/admin' :
+        user?.role === 'organiser' ? '/organiser/events' :
+                                     '/attendee/events';
 
     const navLinks = [
         { href: '/',          label: 'Home' },
-        { href: eventsHref,   label: 'Events' },
+        { href: profileHref,  label: 'Profile' },
+        ...(user?.role === 'attendee' ? [
+            { href: '/attendee/profile/bookings', label: 'Booked events' },
+        ] : []),
     ];
 
     return (
@@ -61,8 +67,8 @@ export default function Header() {
                         <div className={styles.desktopActions}>
                             {user ? (
                                 <>
-                                    <Link href={profileHref} className={styles.linkSecondary}>
-                                        Profile
+                                    <Link href={dashboardHref} className={styles.linkSecondary}>
+                                        Dashboard
                                     </Link>
                                     <button type="button" onClick={handleSignOut} className={styles.linkSecondary}>
                                         Sign out
@@ -122,8 +128,8 @@ export default function Header() {
                     <div className={styles.sidebarFooter}>
                         {user ? (
                             <>
-                                <Link href={profileHref} className={styles.linkSecondary} onClick={handleClose}>
-                                    Profile
+                                <Link href={dashboardHref} className={styles.linkSecondary} onClick={handleClose}>
+                                    Dashboard
                                 </Link>
                                 <button type="button" onClick={handleSignOut} className={styles.linkSecondary}>
                                     Sign out

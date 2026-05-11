@@ -3,17 +3,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import styles from './index.module.css';
+import Image from "next/image";
 
-const STORAGE_KEY = 'campusconnect:avatar';
-
-
-/**
- * Click the avatar -> opens a hidden file input -> shows the chosen image.
- * Persists the data URL to localStorage so it survives reloads.
- *
- * TODO: replace localStorage with an API call:
- *   await fetch(`/api/users/${userId}/avatar`, { method: 'POST', body: formData })
- */
 export default function ProfileAvatar({ userId, initialAvatar }) {
   const [isUploading, setIsUploading] = useState(false);
   const router = useRouter();
@@ -83,7 +74,7 @@ export default function ProfileAvatar({ userId, initialAvatar }) {
         aria-label="Change profile picture"
       >
         {src ? (
-          <img src={src} alt="Profile picture" className={styles.avatarImg} />
+          <Image src={src} alt="Profile picture" className={styles.avatarImg} />
         ) : (
           <span className="material-symbols-outlined" aria-hidden="true">
             account_circle

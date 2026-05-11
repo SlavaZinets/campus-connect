@@ -67,7 +67,7 @@ export default function BookingModal({ event, open, onClose }) {
         throw new Error(`POST /api/bookings failed: ${res.status}`);
       }
 
-      // Refresh server components so capacity bar reflects the new count, then close.
+      // Refresh server components so capacity bar reflects the new count, then close
       onClose();
       router.push('/attendee/profile/bookings');
       router.refresh();

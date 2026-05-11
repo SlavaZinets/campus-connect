@@ -4,7 +4,6 @@ import { FiImage } from 'react-icons/fi';
 import styles from './index.module.css';
 import { formatDate } from '@/utils/helpers';
 import CapacityBar from '@/components/events/CapacityBar';
-import LikeButton from '@/components/ui/LikeButton';
 
 
 export default function EventCard({ event, linkHref }) {
@@ -23,9 +22,6 @@ export default function EventCard({ event, linkHref }) {
             </div>
           )}
           {category && <span className={styles.categoryBadge}>{category}</span>}
-          <div className={styles.likeOverlay}>
-            <LikeButton eventId={id} size="sm" />
-          </div>
         </div>
 
         <div className={styles.eventCardContent}>

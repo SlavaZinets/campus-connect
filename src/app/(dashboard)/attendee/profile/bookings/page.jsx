@@ -4,14 +4,8 @@ import EmptyState from '@/components/profile/EmptyState';
 import styles from './page.module.css';
 
 export default async function BookedEventsPage() {
-  // Forward the session cookie so /api/bookings can identify the caller.
-  const cookieStore = await cookies();
-  const cookieHeader = cookieStore.toString();
 
-  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/bookings`, {
-    headers: { Cookie: cookieHeader },
-    cache: 'no-store',
-  });
+  const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/bookings`);
 
   if (!res.ok) {
     throw new Error(`GET /api/bookings failed: ${res.status}`);
@@ -34,7 +28,7 @@ export default async function BookedEventsPage() {
     <section className={styles.section}>
       <h2 className={styles.title}>Booked events</h2>
       <div className={styles.grid}>
-        {bookings.map(b => (
+        {bookings?.map(b => (
           <AttendeeEventCard
             key={b.booking_id}
             event={b}

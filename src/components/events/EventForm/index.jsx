@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import styles from './index.module.css';
+import Image from "next/image";
 
 const EMPTY = {
   title: '',
@@ -120,7 +121,7 @@ export default function EventForm({ mode = 'create', initialValues }) {
           onClick={() => fileInputRef.current.click()}
         >
           {photo ? (
-            <img src={photo} alt="Preview" className={styles.previewImg} />
+            <Image src={photo} alt="Preview" className={styles.previewImg} />
           ) : (
             <div className={styles.placeholder}>
               <span className="material-symbols-outlined">add_a_photo</span>

@@ -1,60 +1,34 @@
+import { cookies } from 'next/headers';
 import Link from 'next/link';
 import Image from 'next/image';
-import { notFound } from 'next/navigation';
-import { getEventById, getBookersByEventId } from '@/lib/mock/events';
+import { notFound, redirect } from 'next/navigation';
+import { getSession } from '@/lib/session';
+import BackButton from '@/components/ui/BackButton';
 import EventOwnerActions from '@/components/events/EventOwnerActions';
 import BookersList from '@/components/events/BookersList';
 import { formatDay, formatLongDate, formatTimeRange } from '@/utils/helpers';
 import styles from './page.module.css';
-import { getSession } from '@/lib/session';
-import pool from '@/lib/db';
-
 
 export default async function ManageEventPage({ params }) {
   const { id } = await params;
   const session = await getSession();
-
-  
   if (!session) redirect('/login');
 
-  
-  const eventSql = `
-    SELECT
-      events.*,
-      categories.name AS category,
-      users.name      AS organiser
-    FROM events
-    JOIN categories  ON events.category_id  = categories.id
-    JOIN users       ON events.organiser_id = users.id
-    WHERE events.id = ?
-  `;
-  const [eventResult] = await pool.query(eventSql, [id]);
-  const event = eventResult[0];
+  const base = process.env.NEXT_PUBLIC_BASE_URL;
 
-  if (!event) notFound();
+  const eventRes = await fetch(`${base}/api/events/${id}`);
+  if (eventRes.status === 404) notFound();
+  if (!eventRes.ok) throw new Error(`Failed to fetch event: ${eventRes.status}`);
+  const event = await eventRes.json();
 
-  
   if (session.role !== 'admin' && event.organiser_id !== session.id) {
     redirect('/organiser/events');
   }
 
-  
-  const bookingsSql = `
-    SELECT 
-      bookings.id,
-      bookings.status,
-      bookings.booked_at,
-      users.name,
-      users.email,
-      users.avatar_img
-    FROM bookings
-    JOIN users ON bookings.user_id = users.id
-    WHERE bookings.event_id = ?
-    ORDER BY bookings.booked_at DESC
-  `;
-  const [rawBookings] = await pool.query(bookingsSql, [id]);
+  const bookingsRes = await fetch(`${base}/api/events/${id}/bookings`);
+  if (!bookingsRes.ok) throw new Error(`Failed to fetch bookings: ${bookingsRes.status}`);
+  const rawBookings = await bookingsRes.json();
 
-  
   const bookings = rawBookings.map((b) => ({
     ...b,
     user: {
@@ -69,10 +43,7 @@ export default async function ManageEventPage({ params }) {
   return (
     <main className={styles.main}>
       <div className="container">
-        <Link href="/organiser/events" className={styles.back}>
-          <span className="material-symbols-outlined" aria-hidden="true">arrow_back</span>
-          Back to my events
-        </Link>
+        <BackButton label="Back to my events" />
 
         <article className={styles.page}>
           {event.photo && (

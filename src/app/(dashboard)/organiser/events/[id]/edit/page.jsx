@@ -1,6 +1,5 @@
 import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
-import pool from '@/lib/db';
 import { getSession } from '@/lib/session';
 import EventForm from '@/components/events/EventForm';
 import styles from './page.module.css';
@@ -10,22 +9,14 @@ export default async function EditEventPage({ params }) {
   const { id } = await params;
   const session = await getSession();
 
-
   if (!session) redirect('/login');
 
-  const [rows] = await pool.query(
-    `SELECT events.*, categories.name AS category_name 
-     FROM events 
-     LEFT JOIN categories ON events.category_id = categories.id 
-     WHERE events.id = ?`,
-    [id]
-  );
+  const base = process.env.NEXT_PUBLIC_BASE_URL;
 
-  const event = rows[0];
-
-
-  if (!event) notFound();
-
+  const eventRes = await fetch(`${base}/api/events/${id}`);
+  if (eventRes.status === 404) notFound();
+  if (!eventRes.ok) throw new Error(`Failed to fetch event: ${eventRes.status}`);
+  const event = await eventRes.json();
 
   if (session.role !== 'admin' && event.organiser_id !== session.id) {
     redirect('/organiser/events');
@@ -42,12 +33,12 @@ export default async function EditEventPage({ params }) {
     id: event.id,
     title: event.title ?? '',
     description: event.description ?? '',
-    category: event.category_name ?? '', 
+    category: event.category ?? '',
     location: event.location ?? '',
     start_at: formatDateForInput(event.start_at),
     end_at: formatDateForInput(event.end_at),
     capacity: event.capacity ?? '',
-    photo: event.photo ?? null, 
+    photo: event.photo ?? null,
   };
 
   return (

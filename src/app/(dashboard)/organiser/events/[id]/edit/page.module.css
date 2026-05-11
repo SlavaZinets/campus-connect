@@ -16,5 +16,3 @@
 }
 
 .back:hover { color: var(--coral-deep); }
-
-.back :global(.material-symbols-outlined) { font-size: 20px; }

@@ -36,7 +36,7 @@ export default function AdminFooter() {
 
         <div className={styles.bottom}>
           <p className={styles.copy}>
-            © {year} CampusConnect — Admin
+              &copy; {year} CampusConnect — Admin
           </p>
         </div>
       </div>

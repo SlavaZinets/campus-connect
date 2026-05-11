@@ -51,11 +51,6 @@ export default function Footer() {
                     <p className={styles.copy}>
                         © {year} CampusConnect. Built for SWD Assignment 3.
                     </p>
-                    <ul className={styles.legal}>
-                        <li><Link href="/privacy" className={styles.legalLink}>Privacy</Link></li>
-                        <li><Link href="/terms" className={styles.legalLink}>Terms</Link></li>
-                        <li><Link href="/contact" className={styles.legalLink}>Contact</Link></li>
-                    </ul>
                 </div>
             </div>
         </footer>

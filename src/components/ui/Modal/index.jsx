@@ -4,13 +4,6 @@ import { useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import styles from './index.module.css';
 
-/**
- * Generic modal primitive.
- *  - Esc key closes
- *  - Click on backdrop does NOT close — must use the close button
- *  - Locks scroll on html + body while open
- *  - Renders into document.body via portal so z-index / overflow ancestors can't trap it
- */
 export default function Modal({ open, onClose, ariaLabel, children }) {
   const closeBtnRef = useRef(null);
 

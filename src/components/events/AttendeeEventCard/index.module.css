@@ -1,8 +1,6 @@
 .cardLink {
   display: block;
   text-decoration: none;
-  /*Inherit color from global.css*/
-  color: inherit;
   width: 100%;
 }
 
@@ -13,8 +11,7 @@
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   display: flex;
   flex-direction: column;
-  /* animate it over 150 ms with ease-out curve when transform and box-shadow changes */
-  transition: transform 150ms ease-out, box-shadow 150ms ease-out;
+  transition: transform .15s ease-out, box-shadow .15s ease-out;
 }
 
 .eventCardContent {
@@ -85,13 +82,6 @@
   object-fit: cover;
   width: 100%;
   height: 100%;
-}
-
-.likeOverlay {
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  z-index: 1;
 }
 
 /* title */

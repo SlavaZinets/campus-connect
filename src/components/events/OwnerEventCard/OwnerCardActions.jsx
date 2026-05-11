@@ -6,11 +6,6 @@ import { useRouter } from 'next/navigation';
 import Modal from '@/components/ui/Modal';
 import styles from './OwnerCardActions.module.css';
 
-/**
- * Compact edit + delete icon buttons for the OwnerEventCard footer.
- * Delete opens a confirmation modal. Both buttons stop click propagation
- * so they don't trigger navigation when the card itself is also a link.
- */
 export default function OwnerCardActions({ eventId }) {
   const router = useRouter();
   const [confirmOpen, setConfirmOpen] = useState(false);
