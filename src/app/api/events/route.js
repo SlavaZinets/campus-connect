@@ -79,8 +79,8 @@ export async function POST(req) {
 
         const sql = `
             INSERT INTO events
-            (organiser_id, title, description, location, category_id, start_at, capacity)
-            VALUES (?, ?, ?, ?, ?, ?, ?)
+            (organiser_id, title, description, location, category_id, start_at, end_at, capacity, photo)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
         `;
 
         const [result] = await pool.query(sql, [
@@ -90,7 +90,9 @@ export async function POST(req) {
             location,
             category_id,
             toMysqlDt(start_at),
+            toMysqlDt(end_at),
             capacity,
+            photo || null,
         ]);
 
         return NextResponse.json({

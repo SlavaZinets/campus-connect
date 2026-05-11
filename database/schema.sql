@@ -38,10 +38,10 @@ CREATE TABLE IF NOT EXISTS events
     end_at       DATETIME,
     capacity     SMALLINT UNSIGNED NOT NULL,
     booked       SMALLINT UNSIGNED NOT NULL DEFAULT 0,
-    photo LONGTEXT,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT fk_events_organiser FOREIGN KEY (organiser_id) REFERENCES users(id),
-    CONSTRAINT fk_events_category FOREIGN KEY (category_id) REFERENCES categories(id)
+    photo        LONGTEXT,
+    created_at   DATETIME                   DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_events_organiser FOREIGN KEY (organiser_id) REFERENCES users (id),
+    CONSTRAINT fk_events_category FOREIGN KEY (category_id) REFERENCES categories (id)
 );
 
 CREATE TABLE IF NOT EXISTS bookings

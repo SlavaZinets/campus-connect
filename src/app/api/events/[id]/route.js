@@ -42,7 +42,7 @@ export async function PUT(req, { params }) {
         const { id } = await params;
 
         const body = await req.json();
-        const { title, description, location, category_id, start_at, end_at, capacity } = body;
+        const { title, description, location, category_id, start_at, end_at, capacity, photo } = body;
 
         const session = await getSession(req);
         if (!session) return NextResponse.json({error: 'Unauthorised'}, {status: 401});
@@ -61,8 +61,8 @@ export async function PUT(req, { params }) {
         const toMysqlDt = (v) => v ? v.replace('T', ' ') : null;
 
         await pool.query(
-            'UPDATE events SET title = ?, description = ?, location = ?, category_id = ?, start_at = ?, capacity = ? WHERE id = ?',
-            [title, description, location, category_id, toMysqlDt(start_at), capacity, id]
+            'UPDATE events SET title = ?, description = ?, location = ?, category_id = ?, start_at = ?, end_at = ?, capacity = ?, photo = ? WHERE id = ?',
+            [title, description, location, category_id, toMysqlDt(start_at), toMysqlDt(end_at), capacity, photo || null, id]
         );
 
         const [result] = await pool.query('SELECT * FROM events WHERE id = ?', [id]);

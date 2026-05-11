@@ -223,11 +223,11 @@
     }
 }
 
-@media (min-width: 1024px) {
-    .header {
-        position: fixed;
-        top: 0;
-        left: 0;
-        z-index: 99;
-    }
-}
+/*@media (min-width: 1024px) {*/
+/*    .header {*/
+/*        position: fixed;*/
+/*        top: 0;*/
+/*        left: 0;*/
+/*        z-index: 99;*/
+/*    }*/
+/*}*/

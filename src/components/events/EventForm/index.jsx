@@ -1,8 +1,7 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { MOCK_CATEGORIES } from '@/lib/mock/events';
 import styles from './index.module.css';
 
 const EMPTY = {
@@ -24,7 +23,15 @@ export default function EventForm({ mode = 'create', initialValues }) {
   
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState(null);
+  const [categories, setCategories] = useState([]);
   const fileInputRef = useRef(null);
+
+  useEffect(() => {
+    fetch('/api/categories')
+      .then((res) => (res.ok ? res.json() : []))
+      .then(setCategories)
+      .catch(() => setError('Could not load categories. Please refresh.'));
+  }, []);
 
   function update(field) {
     return (e) => setForm((prev) => ({ ...prev, [field]: e.target.value }));
@@ -52,7 +59,7 @@ export default function EventForm({ mode = 'create', initialValues }) {
     setSubmitting(true);
     setError(null);
 
-    const categoryId = MOCK_CATEGORIES.find((c) => c.name === form.category)?.id;
+    const categoryId = categories.find((c) => c.name === form.category)?.id;
     if (!categoryId) {
       setError('Please pick a valid category.');
       setSubmitting(false);
@@ -164,9 +171,12 @@ export default function EventForm({ mode = 'create', initialValues }) {
             onChange={update('category')}
             className={styles.input}
             required
+            disabled={categories.length === 0}
           >
-            <option value="" disabled>Pick a category</option>
-            {MOCK_CATEGORIES.map((c) => (
+            <option value="" disabled>
+              {categories.length === 0 ? 'Loading...' : 'Pick a category'}
+            </option>
+            {categories.map((c) => (
               <option key={c.id} value={c.name}>{c.name}</option>
             ))}
           </select>
