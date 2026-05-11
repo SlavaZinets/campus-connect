@@ -1,7 +1,4 @@
 .header {
-    position: sticky;
-    top: 0;
-    z-index:50;
     width: 100%;
     background-color: var(--paper);
     border-bottom: 1px solid var(--border);
@@ -222,5 +219,14 @@
     .sidebar,
     .overlay {
         display: none;
+    }
+}
+
+@media (min-width: 1024px) {
+    .header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 99;
     }
 }
