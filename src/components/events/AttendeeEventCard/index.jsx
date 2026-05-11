@@ -3,7 +3,6 @@ import Image from 'next/image';
 import styles from './index.module.css';
 import { formatDate } from '@/utils/helpers';
 import CapacityBar from '@/components/events/CapacityBar';
-import LikeButton from '@/components/ui/LikeButton';
 
 
 export default function AttendeeEventCard({ event, linkHref }) {
@@ -15,10 +14,7 @@ export default function AttendeeEventCard({ event, linkHref }) {
             <article className={styles.card}>
                 {photo && (
                     <div className={styles.photoWrap}>
-                        <Image src={photo} alt={title} fill sizes="100vw" className={styles.photo} />
-                        <div className={styles.likeOverlay}>
-                            <LikeButton eventId={id} size="sm" />
-                        </div>
+                        <Image src={photo} alt={title} fill sizes="100vw" unoptimized className={styles.photo} />
                     </div>
                 )}
 

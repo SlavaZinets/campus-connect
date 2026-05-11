@@ -14,7 +14,6 @@
   margin: 0;
 }
 
-/* form grid: 2 columns desktop, 1 column on narrow */
 .grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -87,11 +86,6 @@
   border-color: var(--warm-gray);
 }
 
-.cancelBtn:focus-visible {
-  outline: 2px solid var(--coral);
-  outline-offset: 2px;
-}
-
 .saveBtn {
   padding: 10px 24px;
   border-radius: 12px;
@@ -107,11 +101,6 @@
 
 .saveBtn:hover {
   background-color: var(--coral-deep);
-}
-
-.saveBtn:focus-visible {
-  outline: 2px solid var(--coral);
-  outline-offset: 2px;
 }
 
 @media (max-width: 640px) {

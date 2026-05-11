@@ -63,10 +63,6 @@
   transform: scale(1.05);
 }
 
-.fab :global(.material-symbols-outlined) {
-  font-size: 28px;
-}
-
 @media (max-width: 1024px) {
   .layout {
     gap: 32px;

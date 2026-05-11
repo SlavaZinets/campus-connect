@@ -17,6 +17,7 @@ export async function GET(req) {
                     bookings.user_id,
                     events.id             AS event_id,
                     events.title,
+                    events.photo,
                     events.location,
                     events.start_at,
                     events.capacity,

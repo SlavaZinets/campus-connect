@@ -3,7 +3,6 @@ import styles from './index.module.css';
 import { formatDay, formatLongDate, formatTimeRange } from '@/utils/helpers';
 import CapacityBar from '@/components/events/CapacityBar';
 import EventCard from '@/components/events/EventCard';
-import LikeButton from '@/components/ui/LikeButton';
 import BookButton from '@/components/events/BookButton';
 
 export default function EventDetail({ event, similarEvents = [] }) {
@@ -37,13 +36,9 @@ export default function EventDetail({ event, similarEvents = [] }) {
     <article className={styles.page}>
       {photo && (
         <div className={styles.hero}>
-          <Image src={photo} alt={title} fill priority className={styles.heroImg} />
+          <Image src={photo} alt={title} fill priority unoptimized className={styles.heroImg} />
         </div>
       )}
-
-      <div className={styles.actionsRow}>
-        <LikeButton eventId={id} size="lg" />
-      </div>
 
       <div className={styles.layout}>
         <div className={styles.main}>

@@ -1,22 +1,25 @@
+import { FiUser } from 'react-icons/fi';
 import styles from './index.module.css';
-import {formatDate} from "@/utils/helpers";
+import { formatDate } from '@/utils/helpers';
+import Image from "next/image";
 
 const ROLE_LABELS = {
     admin: 'Admin', organiser: 'Organiser', attendee: 'Attendee',
 };
 
-function getInitial(name) {
-    return name?.trim()?.charAt(0)?.toUpperCase() || '?';
-}
-
-
-export default function UserCard({user, onClick}) {
-    const {name, email, role, created_at} = user;
+export default function UserCard({ user, onClick }) {
+    const { name, email, role, avatar_img, created_at } = user;
     const roleClass = styles[`role_${role}`] ?? styles.role_attendee;
 
     return (
         <button className={styles.card} onClick={onClick}>
-            <span className={styles.avatar}>{getInitial(name)}</span>
+            <span className={styles.avatar}>
+                {avatar_img ? (
+                    <Image src={avatar_img} alt="" fill sizes="48px" unoptimized className={styles.avatarImg} />
+                ) : (
+                    <FiUser aria-hidden="true" />
+                )}
+            </span>
             <div className={styles.body}>
                 <span className={styles.name}>{name}</span>
                 <span className={styles.email}>{email}</span>

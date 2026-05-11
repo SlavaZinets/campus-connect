@@ -1,3 +1,4 @@
+import { FiImage } from 'react-icons/fi';
 import { formatDate } from '@/utils/helpers';
 import styles from './index.module.css';
 
@@ -6,17 +7,19 @@ const STATUS_LABELS = {
     cancelled: 'Cancelled',
 };
 
-function getInitial(title) {
-    return title?.trim()?.charAt(0)?.toUpperCase() || '?';
-}
-
 export default function BookingCard({ booking, onClick }) {
-    const { title, attendee_name, attendee_email, status, start_at, location } = booking;
+    const { title, photo, attendee_name, attendee_email, status, start_at, location } = booking;
     const statusClass = styles[`status_${status}`] ?? styles.status_confirmed;
 
     return (
         <button className={styles.card} onClick={onClick}>
-            <span className={styles.avatar}>{getInitial(title)}</span>
+            <span className={styles.avatar}>
+                {photo ? (
+                    <img src={photo} alt="" className={styles.avatarImg} />
+                ) : (
+                    <FiImage aria-hidden="true" />
+                )}
+            </span>
             <div className={styles.body}>
                 <span className={styles.title}>{title}</span>
                 <span className={styles.attendee}>{attendee_name} | {attendee_email}</span>

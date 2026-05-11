@@ -1,9 +1,10 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { MOCK_CATEGORIES } from '@/lib/mock/events';
+import { FiImage } from 'react-icons/fi';
 import styles from './index.module.css';
+import Image from "next/image";
 
 const EMPTY = {
   title: '',
@@ -24,7 +25,15 @@ export default function EventForm({ mode = 'create', initialValues }) {
   
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState(null);
+  const [categories, setCategories] = useState([]);
   const fileInputRef = useRef(null);
+
+  useEffect(() => {
+    fetch('/api/categories')
+      .then((res) => (res.ok ? res.json() : []))
+      .then(setCategories)
+      .catch(() => setError('Could not load categories. Please refresh.'));
+  }, []);
 
   function update(field) {
     return (e) => setForm((prev) => ({ ...prev, [field]: e.target.value }));
@@ -52,7 +61,7 @@ export default function EventForm({ mode = 'create', initialValues }) {
     setSubmitting(true);
     setError(null);
 
-    const categoryId = MOCK_CATEGORIES.find((c) => c.name === form.category)?.id;
+    const categoryId = categories.find((c) => c.name === form.category)?.id;
     if (!categoryId) {
       setError('Please pick a valid category.');
       setSubmitting(false);
@@ -61,16 +70,17 @@ export default function EventForm({ mode = 'create', initialValues }) {
 
     const toMysql = (v) => (v ? v.replace('T', ' ') + ':00' : v);
 
-    
+    const startAt = form.start_at || initialValues?.start_at || '';
+
     const payload = {
       title: form.title,
       description: form.description,
       location: form.location,
       category_id: categoryId,
-      start_at: toMysql(form.start_at),
-      end_at: toMysql(form.end_at), 
+      start_at: toMysql(startAt),
+      end_at: toMysql(form.end_at),
       capacity: Number(form.capacity),
-      photo: photo, 
+      photo: photo,
     };
 
     try {
@@ -113,11 +123,10 @@ export default function EventForm({ mode = 'create', initialValues }) {
           onClick={() => fileInputRef.current.click()}
         >
           {photo ? (
-            <img src={photo} alt="Preview" className={styles.previewImg} />
+            <Image src={photo} alt="Preview" fill sizes="720px" unoptimized className={styles.previewImg} />
           ) : (
-            <div className={styles.placeholder}>
-              <span className="material-symbols-outlined">add_a_photo</span>
-              <p>Click to upload a cover image</p>
+            <div className={styles.placeholder} aria-label="Click to upload a cover image">
+              <FiImage aria-hidden="true" />
             </div>
           )}
         </div>
@@ -164,9 +173,12 @@ export default function EventForm({ mode = 'create', initialValues }) {
             onChange={update('category')}
             className={styles.input}
             required
+            disabled={categories.length === 0}
           >
-            <option value="" disabled>Pick a category</option>
-            {MOCK_CATEGORIES.map((c) => (
+            <option value="" disabled>
+              {categories.length === 0 ? 'Loading...' : 'Pick a category'}
+            </option>
+            {categories.map((c) => (
               <option key={c.id} value={c.name}>{c.name}</option>
             ))}
           </select>
@@ -194,7 +206,7 @@ export default function EventForm({ mode = 'create', initialValues }) {
             value={form.start_at}
             onChange={update('start_at')}
             className={styles.input}
-            required
+            required={mode === 'create'}
           />
         </div>
 

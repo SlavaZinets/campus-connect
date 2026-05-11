@@ -27,17 +27,6 @@
   color: var(--white);
 }
 
-.iconBtn:focus-visible {
-  outline: 2px solid var(--coral);
-  outline-offset: 2px;
-}
-
-.iconBtn :global(.material-symbols-outlined) {
-  font-size: 20px;
-  font-variation-settings: 'wght' 500;
-}
-
-/* delete variant: rust hover instead of coral */
 .deleteBtn {
   color: var(--rust);
   border-color: var(--rust);
@@ -49,7 +38,6 @@
   color: var(--white);
 }
 
-/* confirm modal body */
 .confirm {
   padding: 32px;
   display: flex;

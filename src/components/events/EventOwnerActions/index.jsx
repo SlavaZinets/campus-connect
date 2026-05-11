@@ -6,10 +6,6 @@ import { useRouter } from 'next/navigation';
 import Modal from '@/components/ui/Modal';
 import styles from './index.module.css';
 
-/**
- * Edit / Delete buttons for an event the user owns. Delete opens a confirm
- * modal first to prevent accidents.
- */
 export default function EventOwnerActions({ eventId }) {
   const router = useRouter();
   const [confirmOpen, setConfirmOpen] = useState(false);
@@ -33,7 +29,6 @@ export default function EventOwnerActions({ eventId }) {
       router.push('/organiser/events');
       router.refresh();
     } catch (err) {
-      console.error(err);
       alert('Something went wrong. Please try again.');
     } finally {
       setDeleting(false);

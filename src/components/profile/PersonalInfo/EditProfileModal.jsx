@@ -5,12 +5,16 @@ import Modal from '@/components/ui/Modal';
 import styles from './EditProfileModal.module.css';
 
 export default function EditProfileModal({ user, open, onClose, onSave }) {
-  // Local form state — copied from the current user every time the modal opens,
-  // so cancelling discards any in-progress edits.
   const [form, setForm] = useState(user);
 
   useEffect(() => {
-    if (open) setForm(user);
+
+      const handleForm = async () => {
+          if (open)  setForm(user);
+      }
+
+      handleForm();
+
   }, [open, user]);
 
   function update(field) {
@@ -19,7 +23,6 @@ export default function EditProfileModal({ user, open, onClose, onSave }) {
 
   function handleSubmit(e) {
     e.preventDefault();
-    // TODO: PATCH /api/users/me with the diff
     onSave(form);
   }
 
@@ -30,7 +33,7 @@ export default function EditProfileModal({ user, open, onClose, onSave }) {
 
         <div className={styles.grid}>
           <div className={styles.field}>
-            <label htmlFor="firstName" className={styles.label}>Name</label>
+            <label htmlFor="firstName" className={styles.label}>First name</label>
             <input
               id="firstName"
               type="text"

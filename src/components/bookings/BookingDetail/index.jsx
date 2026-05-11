@@ -8,13 +8,6 @@ import Modal from '@/components/ui/Modal';
 import { formatDay, formatLongDate, formatTimeRange } from '@/utils/helpers';
 import styles from './index.module.css';
 
-/**
- * Attendee booking-detail page.
- *  Left column  : rich event info (Date and time, About, Location with map, Organised by)
- *  Right aside  : event hero + compact "Ticket" card (opens View ticket modal) + Cancel ticket button
- *
- * TODO: replace handleCancel with PATCH /api/bookings/[id] { status: 'cancelled' }.
- */
 export default function BookingDetail({ event }) {
   const router = useRouter();
   const [confirmOpen, setConfirmOpen] = useState(false);
@@ -85,12 +78,11 @@ export default function BookingDetail({ event }) {
 
 
   return (
-    <main className={styles.main}>
-      <div className="container">
-        <Link href="/attendee/profile/bookings" className={styles.back}>
-          <span className="material-symbols-outlined" aria-hidden="true">arrow_back</span>
-          Back to bookings
-        </Link>
+    <article>
+      <Link href="/attendee/profile/bookings" className={styles.back}>
+        <span className="material-symbols-outlined" aria-hidden="true">arrow_back</span>
+        Back to bookings
+      </Link>
 
         <div className={styles.layout}>
           {/* LEFT — event information */}
@@ -163,6 +155,7 @@ export default function BookingDetail({ event }) {
                   alt={title}
                   fill
                   priority
+                  unoptimized
                   className={styles.heroImg}
                 />
               </div>
@@ -300,8 +293,7 @@ export default function BookingDetail({ event }) {
               </button>
             </div>
           </div>
-        </Modal>
-      </div>
-    </main>
+      </Modal>
+    </article>
   );
 }

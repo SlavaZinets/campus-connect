@@ -1,26 +1,28 @@
 import Link from 'next/link';
 import Image from 'next/image';
+import { FiImage } from 'react-icons/fi';
 import styles from './index.module.css';
 import { formatDate } from '@/utils/helpers';
 import CapacityBar from '@/components/events/CapacityBar';
-import LikeButton from '@/components/ui/LikeButton';
 
 
 export default function EventCard({ event, linkHref }) {
-  const { id, title, photo, location, start_at, capacity, booked } = event;
+  const { id, title, photo, category, location, start_at, capacity, booked } = event;
   const href = linkHref ?? `/attendee/events/${id}`;
 
   return (
     <Link href={href} className={styles.cardLink}>
       <article className={styles.card}>
-        {photo && (
-          <div className={styles.photoWrap}>
-            <Image src={photo} alt={title} fill sizes="100vw" className={styles.photo} />
-            <div className={styles.likeOverlay}>
-              <LikeButton eventId={id} size="sm" />
+        <div className={styles.photoWrap}>
+          {photo ? (
+            <Image src={photo} alt={title} fill sizes="100vw" unoptimized className={styles.photo} />
+          ) : (
+            <div className={styles.photoPlaceholder} aria-hidden="true">
+              <FiImage />
             </div>
-          </div>
-        )}
+          )}
+          {category && <span className={styles.categoryBadge}>{category}</span>}
+        </div>
 
         <div className={styles.eventCardContent}>
           <h3 className={styles.title}>{title}</h3>

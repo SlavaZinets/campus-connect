@@ -40,7 +40,7 @@
     border-radius: 2px;
 }
 
-/* ===== Desktop nav (hidden on mobile) ===== */
+/* desktop nav */
 
 .desktopNav {
     display: none;
@@ -207,7 +207,7 @@
     border-top: 1px solid var(--border);
 }
 
-/* ===== Tablet & up ===== */
+/* tablet and laptop*/
 
 @media (min-width: 768px) {
 
@@ -220,14 +220,5 @@
     .sidebar,
     .overlay {
         display: none;
-    }
-}
-
-@media (min-width: 1024px) {
-    .header {
-        position: fixed;
-        top: 0;
-        left: 0;
-        z-index: 99;
     }
 }

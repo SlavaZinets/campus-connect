@@ -1,14 +1,6 @@
 import { formatDate } from '@/utils/helpers';
 import styles from './index.module.css';
 
-/**
- * Renders bookings as a table. Owners see {name, booked_at, status}; admins
- * could pass extra columns through later.
- *
- * Props:
- *   - bookings: array of { id, booked_at, status, user: { name } }
- *   - limit (optional): only show first N rows
- */
 export default function BookersList({ bookings = [], limit }) {
   const rows = limit ? bookings.slice(0, limit) : bookings;
   const truncated = limit ? bookings.length > limit : false;

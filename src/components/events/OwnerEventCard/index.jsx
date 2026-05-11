@@ -1,15 +1,12 @@
 import Link from 'next/link';
 import Image from 'next/image';
+import { FiImage } from 'react-icons/fi';
 import OwnerCardActions from './OwnerCardActions';
 import { formatDate } from '@/utils/helpers';
 import styles from './index.module.css';
 
-/**
- * Variant of EventCard for an event the user owns. The photo and the title
- * link to the management view; the actions sit inline next to the title.
- */
 export default function OwnerEventCard({ event }) {
-  const { id, title, photo, location, start_at, capacity, booked } = event;
+  const { id, title, photo, category, location, start_at, capacity, booked } = event;
   const pct = capacity > 0 ? Math.min((booked / capacity) * 100, 100) : 0;
   const isFull = booked >= capacity;
   const isAlmost = pct >= 75;
@@ -20,17 +17,21 @@ export default function OwnerEventCard({ event }) {
       <Link href={manageHref} className={styles.photoLink} aria-label={title}>
        <div className={styles.photoWrap}>
           {photo ? (
-            
-            <img 
-              src={photo} 
-              alt="" 
-              className={styles.photo} 
+
+            <Image
+              src={photo}
+              alt=""
+              fill
+              sizes="100vw"
+              unoptimized
+              className={styles.photo}
             />
           ) : (
             <div className={styles.photoPlaceholder}>
-               <span className="material-symbols-outlined">image</span>
+              <FiImage aria-hidden="true" />
             </div>
           )}
+          {category && <span className={styles.categoryBadge}>{category}</span>}
         </div>
       </Link>
 

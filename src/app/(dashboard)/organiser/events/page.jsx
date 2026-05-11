@@ -1,36 +1,19 @@
-import pool from '@/lib/db';
-
+import { cookies } from 'next/headers';
 import Link from 'next/link';
 import OwnerEventCard from '@/components/events/OwnerEventCard';
 import EmptyState from '@/components/profile/EmptyState';
-
-import styles from './page.module.css';
 import { getSession } from '@/lib/session';
+import styles from './page.module.css';
 
 export default async function OrganiserEventsPage() {
-  
-  const session = await getSession();
+  const base = process.env.NEXT_PUBLIC_BASE_URL;
+  const cookieHeader = (await cookies()).toString();
 
-  
-  if (!session || session.role !== 'organiser') {
-    return (
-      <main className="container">
-        <p>You must be logged in as an organiser to view this page.</p>
-      </main>
-    );
-  }
-
-  
-  const [ownEvents] = await pool.query(
-    `SELECT 
-        events.*, 
-        categories.name AS category 
-     FROM events 
-     LEFT JOIN categories ON events.category_id = categories.id
-     WHERE organiser_id = ? 
-     ORDER BY created_at DESC`,
-    [session.id]
-  );
+  const eventsRes = await fetch(`${base}/api/events/mine`, {
+    headers: { Cookie: cookieHeader },
+  });
+  if (!eventsRes.ok) throw new Error(`Failed to fetch events: ${eventsRes.status}`);
+  const ownEvents = await eventsRes.json();
 
   return (
     <main className={styles.main}>
@@ -39,7 +22,7 @@ export default async function OrganiserEventsPage() {
           <div>
             <h1 className={styles.title}>My events</h1>
             <p className={styles.subtitle}>
-              Events you've created. Click a card to manage bookings, edit details, or delete.
+              Events you&#39;ve created. Click a card to manage bookings, edit details, or delete.
             </p>
           </div>
           <Link href="/organiser/events/new" className={styles.newBtn}>

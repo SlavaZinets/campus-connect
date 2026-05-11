@@ -7,9 +7,6 @@ export async function GET(req, { params }) {
     try {
         const { id } = await params;
 
-        // JOIN categories + users so the response uses human names matching the UI.
-        // LEFT JOIN bookings (filtered to confirmed) and COUNT for the booked total —
-        // events table has no booked column.
         const sql = `
             SELECT
                 events.*,
@@ -42,7 +39,7 @@ export async function PUT(req, { params }) {
         const { id } = await params;
 
         const body = await req.json();
-        const { title, description, location, category_id, start_at, end_at, capacity } = body;
+        const { title, description, location, category_id, start_at, end_at, capacity, photo } = body;
 
         const session = await getSession(req);
         if (!session) return NextResponse.json({error: 'Unauthorised'}, {status: 401});
@@ -61,8 +58,8 @@ export async function PUT(req, { params }) {
         const toMysqlDt = (v) => v ? v.replace('T', ' ') : null;
 
         await pool.query(
-            'UPDATE events SET title = ?, description = ?, location = ?, category_id = ?, start_at = ?, capacity = ? WHERE id = ?',
-            [title, description, location, category_id, toMysqlDt(start_at), capacity, id]
+            'UPDATE events SET title = ?, description = ?, location = ?, category_id = ?, start_at = ?, end_at = ?, capacity = ?, photo = ? WHERE id = ?',
+            [title, description, location, category_id, toMysqlDt(start_at), toMysqlDt(end_at), capacity, photo || null, id]
         );
 
         const [result] = await pool.query('SELECT * FROM events WHERE id = ?', [id]);

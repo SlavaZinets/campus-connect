@@ -4,13 +4,10 @@ import EmptyState from '@/components/profile/EmptyState';
 import styles from './page.module.css';
 
 export default async function BookedEventsPage() {
-  // Forward the session cookie so /api/bookings can identify the caller.
-  const cookieStore = await cookies();
-  const cookieHeader = cookieStore.toString();
+  const cookieHeader = (await cookies()).toString();
 
   const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/bookings`, {
     headers: { Cookie: cookieHeader },
-    cache: 'no-store',
   });
 
   if (!res.ok) {
@@ -34,7 +31,7 @@ export default async function BookedEventsPage() {
     <section className={styles.section}>
       <h2 className={styles.title}>Booked events</h2>
       <div className={styles.grid}>
-        {bookings.map(b => (
+        {bookings?.map(b => (
           <AttendeeEventCard
             key={b.booking_id}
             event={b}
