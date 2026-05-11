@@ -21,7 +21,7 @@ export async function proxy(req) {
   const token = req.cookies.get('session')?.value;
   const isAuthPage = AUTH_PAGES.includes(pathname);
 
-  // No cookie at all — allow auth pages through, send everyone else to /login.
+  // No cookie at all — allow auth pages through, send everyone else to /login
   if (!token) {
     if (isAuthPage) return NextResponse.next();
     return NextResponse.redirect(new URL('/login', req.url));
@@ -32,12 +32,12 @@ export async function proxy(req) {
     const { payload } = await jwtVerify(token, SECRET);
     role = payload.role;
   } catch {
-    // Bad/expired token — same fall-through as no cookie.
+    // Bad/expired token — same fall-through as no cookie
     if (isAuthPage) return NextResponse.next();
     return NextResponse.redirect(new URL('/login', req.url));
   }
 
-  // Signed-in users have no business on /login or /register.
+  // Signed-in users have no business on /login or /register
   if (isAuthPage) {
     return NextResponse.redirect(new URL(homeFor(role), req.url));
   }
@@ -45,17 +45,17 @@ export async function proxy(req) {
   // Admin can access every protected area.
   if (role === 'admin') return NextResponse.next();
 
-  // /organiser/* — organisers only.
+  // /organiser/* - organisers only.
   if (pathname.startsWith('/organiser') && role !== 'organiser') {
     return NextResponse.redirect(new URL(homeFor(role), req.url));
   }
 
-  // /attendee/* — attendees only.
+  // /attendee/* - attendees only.
   if (pathname.startsWith('/attendee') && role !== 'attendee') {
     return NextResponse.redirect(new URL(homeFor(role), req.url));
   }
 
-  // /admin/* — admins only (already returned above; this catches everything else).
+  // /admin - admins only.
   if (pathname.startsWith('/admin')) {
     return NextResponse.redirect(new URL(homeFor(role), req.url));
   }
@@ -63,7 +63,7 @@ export async function proxy(req) {
   return NextResponse.next();
 }
 
-// Only intercept UI routes that need protection. API routes do their own auth check.
+// Only intercept UI routes that need protection. API routes do their own auth check
 export const config = {
   matcher: ['/attendee/:path*', '/organiser/:path*', '/admin/:path*', '/login', '/register'],
 };

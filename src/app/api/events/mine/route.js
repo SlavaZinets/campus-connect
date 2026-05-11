@@ -16,9 +16,9 @@ export async function GET(req) {
 
         
         const sql = `
-            SELECT 
-                events.*, 
-                categories.name AS category_name 
+            SELECT
+                events.*,
+                categories.name AS category
             FROM events
             LEFT JOIN categories ON events.category_id = categories.id
             WHERE events.organiser_id = ?

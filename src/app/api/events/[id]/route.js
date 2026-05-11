@@ -7,9 +7,6 @@ export async function GET(req, { params }) {
     try {
         const { id } = await params;
 
-        // JOIN categories + users so the response uses human names matching the UI.
-        // LEFT JOIN bookings (filtered to confirmed) and COUNT for the booked total —
-        // events table has no booked column.
         const sql = `
             SELECT
                 events.*,

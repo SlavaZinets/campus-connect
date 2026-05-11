@@ -9,7 +9,7 @@ export async function GET(req) {
         if (session.role !== 'admin') return NextResponse.json({error: 'Forbidden'}, {status: 403});
 
         const [users] = await pool.query(
-            'SELECT id, name, email, role, created_at FROM users'
+            'SELECT id, name, email, role, avatar_img, created_at FROM users'
         );
 
         if (users.length === 0) return NextResponse.json([], {status: 200});

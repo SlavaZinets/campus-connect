@@ -4,13 +4,6 @@ import pool from '@/lib/db';
 
 const SECRET = new TextEncoder().encode(process.env.SESSION_SECRET);
 
-/**
- * Reads the session cookie and returns the current user (or null) for use in
- * server components / layouts. Server-only — do not import from client code.
- *
- * Returns the shape PersonalInfo / ProfileSidebar / EditProfileModal expect:
- *   { id, firstName, lastName, email, phone, dateOfBirth, avatar_img, role }
- */
 export async function getCurrentUser() {
   const store = await cookies();
   const token = store.get('session')?.value;
