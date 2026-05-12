@@ -1,0 +1,23 @@
+.btn {
+    width: fit-content;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 8px 14px;
+    color: var(--ink);
+    font-family: var(--font-body), sans-serif;
+    font-size: var(--fs-body-m);
+    font-weight: var(--fw-medium);
+    cursor: pointer;
+    transition: background-color .3s ease-out, border-color .3s ease-out, color .3s ease-out;
+}
+
+.btn:hover {
+    background-color: var(--paper);
+    border-color: var(--taupe);
+    color: var(--coral);
+}
+

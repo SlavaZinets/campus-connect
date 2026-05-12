@@ -1,0 +1,32 @@
+.wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.bar {
+  height: 6px;
+  background-color: var(--border);
+  border-radius: 99px;
+  overflow: hidden;
+}
+
+.fill {
+  height: 100%;
+  border-radius: 99px;
+  background-color: var(--sage);
+  transition: width 300ms ease-out;
+}
+
+.fill.almost {
+  background-color: var(--amber);
+}
+
+.fill.full {
+  background-color: var(--rust);
+}
+
+.label {
+  font-size: var(--fs-body-s);
+  color: var(--warm-gray);
+}

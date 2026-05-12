@@ -1,0 +1,29 @@
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 64px 32px;
+  background-color: var(--paper);
+  border: 1px dashed var(--border);
+  border-radius: 16px;
+  text-align: center;
+}
+
+.message {
+  font-size: var(--fs-body-l);
+  color: var(--warm-gray);
+  margin: 0;
+}
+
+.cta {
+  font-size: var(--fs-body-m);
+  font-weight: var(--fw-semibold);
+  color: var(--coral);
+  text-decoration: none;
+}
+
+.cta:hover {
+  color: var(--coral-deep);
+}

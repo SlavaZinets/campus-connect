@@ -1,0 +1,128 @@
+.form {
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.title {
+  font-family: var(--font-display);
+  font-size: var(--fs-h2);
+  font-weight: var(--fw-semibold);
+  color: var(--ink);
+  line-height: var(--lh-h2);
+  margin: 0;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.fullWidth {
+  grid-column: 1 / -1;
+}
+
+.label {
+  font-family: var(--font-body);
+  font-size: var(--fs-body-s);
+  font-weight: var(--fw-semibold);
+  color: var(--ink);
+}
+
+.input {
+  font-family: var(--font-body);
+  font-size: var(--fs-body-m);
+  color: var(--ink);
+  background-color: var(--white);
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  transition: border-color 150ms ease-out, box-shadow 150ms ease-out;
+}
+
+.input:hover {
+  border-color: var(--warm-gray);
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--coral);
+  box-shadow: 0 0 0 3px rgba(201, 100, 66, 0.15);
+}
+
+/* actions */
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 8px;
+  flex-wrap: wrap;
+}
+
+.cancelBtn {
+  padding: 10px 20px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background-color: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: var(--fs-body-m);
+  font-weight: var(--fw-medium);
+  cursor: pointer;
+  transition: background-color 150ms ease-out, border-color 150ms ease-out;
+}
+
+.cancelBtn:hover {
+  background-color: var(--cream);
+  border-color: var(--warm-gray);
+}
+
+.saveBtn {
+  padding: 10px 24px;
+  border-radius: 12px;
+  border: none;
+  background-color: var(--coral);
+  color: var(--white);
+  font-family: var(--font-body);
+  font-size: var(--fs-body-m);
+  font-weight: var(--fw-medium);
+  cursor: pointer;
+  transition: background-color 150ms ease-out;
+}
+
+.saveBtn:hover {
+  background-color: var(--coral-deep);
+}
+
+@media (max-width: 640px) {
+  .form {
+    padding: 24px 20px;
+    gap: 20px;
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .fullWidth {
+    grid-column: auto;
+  }
+
+  .actions {
+    flex-direction: column-reverse;
+  }
+
+  .cancelBtn,
+  .saveBtn {
+    width: 100%;
+  }
+}
