@@ -40,3 +40,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# local database dump (contains password hashes / seed data - do not commit)
+mysqldump.sql
